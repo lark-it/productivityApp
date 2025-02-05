@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:background="@drawable/rounded_bg"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <!-- Чекбокс -->
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+
+        android:layout_gravity="center_vertical"
+         />
+
+    <!-- Заголовок задачи -->
+
+    <ImageButton
+        android:id="@+id/delete_button"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center_vertical"
+        android:background="@android:color/transparent"
+        android:contentDescription="Удалить"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_delete"
+        app:tint="@color/white" />
+
+    <ImageButton
+        android:id="@+id/edit_button"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center_vertical"
+        android:background="@android:color/transparent"
+        android:contentDescription="Редактировать"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_edit"
+        app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/tv_task_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="10dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="Название задачи"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- Важность -->
+    <TextView
+        android:id="@+id/tv_important"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="3"
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+    <!-- Время -->
+    <TextView
+        android:id="@+id/tv_task_time"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="14:00"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+</LinearLayout>

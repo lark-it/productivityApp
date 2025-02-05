@@ -1,0 +1,60 @@
+### Android/IntelliJ-specific ignores ###
+*.iml
+*.hprof
+*.idea/**/workspace.xml
+*.idea/**/tasks.xml
+*.idea/**/usage.statistics.xml
+*.idea/**/dictionaries
+*.idea/**/shelf
+*.idea/**/gradle.xml
+*.idea/libraries
+.idea/modules.xml
+.idea/.gitignore
+
+# OS-specific files (Mac and Windows)
+.DS_Store
+Thumbs.db
+
+### Gradle files ###
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/assetWizardSettings.xml
+/.idea/navEditor.xml
+/.idea/sonarlint
+
+# Gradle wrapper logs and cache
+.gradle/
+/build/
+captures/
+.externalNativeBuild/
+.cxx/
+local.properties
+
+### Dependency Caches ###
+**/.gradle
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Kotlin-specific
+*.kotlin_module
+
+### Android Studio Generated Files ###
+/app/build/
+**/build/
+/captures/
+/output.json
+/.cxx/
+
+
+# ProGuard и R8
+*.mapping
+*.seeds
+*.log
+*.dump
+
+# Virtual device logs
+hs_err_pid*

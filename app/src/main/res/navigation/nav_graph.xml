@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/nav_goals">
+
+    <fragment
+        android:id="@+id/nav_goals"
+        android:name="com.example.productivity.GoalsFragment"
+        android:label="Цели"
+        tools:layout="@layout/fragment_goals" />
+
+    <fragment
+        android:id="@+id/nav_calendar"
+        android:name="com.example.productivity.CalendarFragment"
+        android:label="Календарь"
+        tools:layout="@layout/fragment_calendar" />
+
+    <fragment
+        android:id="@+id/nav_games"
+        android:name="com.example.productivity.GamesFragment"
+        android:label="Игра"
+        tools:layout="@layout/fragment_games" />
+
+    <fragment
+        android:id="@+id/nav_analysis"
+        android:name="com.example.productivity.AnalysisFragment"
+        android:label="Анализ"
+        tools:layout="@layout/fragment_analysis" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.example.productivity.SettingsFragment"
+        android:label="Настройки"
+        tools:layout="@layout/fragment_settings" />
+
+</navigation>
