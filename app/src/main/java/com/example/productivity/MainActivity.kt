@@ -18,5 +18,12 @@ class MainActivity : AppCompatActivity() {
         // Связываем BottomNavigationView с NavController
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigationView.setupWithNavController(navController)
+
+        bottomNavigationView.setOnItemReselectedListener { item ->
+            if (item.itemId == R.id.nav_goals) {
+                supportFragmentManager.popBackStack() // Закрываем верхний фрагмент, если он открыт
+            }
+        }
+
     }
 }

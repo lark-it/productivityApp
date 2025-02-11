@@ -1,4 +1,4 @@
-package com.example.productivity
+package com.example.productivity.calendar
 
 import androidx.room.Dao
 import androidx.room.Delete

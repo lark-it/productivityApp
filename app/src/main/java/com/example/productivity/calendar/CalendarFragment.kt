@@ -1,13 +1,11 @@
-package com.example.productivity
+package com.example.productivity.calendar
 
 import android.app.TimePickerDialog
-import android.media.Image
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
@@ -17,15 +15,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.productivity.AppDatabase
+import com.example.productivity.OnDayClickListener
+import com.example.productivity.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class CalendarFragment : Fragment(),OnDayClickListener  {
+class CalendarFragment : Fragment(), OnDayClickListener {
     //задачи
     private val tasks = mutableListOf<TaskEntity>()
     private lateinit var taskAdapter: TaskAdapter
@@ -48,19 +47,14 @@ class CalendarFragment : Fragment(),OnDayClickListener  {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                // Добавляем новое поле isCompleted с дефолтным значением false
-                database.execSQL("ALTER TABLE tasks ADD COLUMN isCompleted INTEGER NOT NULL DEFAULT 0")
-            }
-        }
         database = Room.databaseBuilder(
             requireContext(),
             AppDatabase::class.java,
             "task_database"
         )
-            .addMigrations(MIGRATION_1_2) // Подключаем миграцию
+            .fallbackToDestructiveMigration() // Удалит старую БД и создаст заново!
             .build()
+
 
         taskDao = database.taskDao()
 

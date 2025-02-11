@@ -1,4 +1,4 @@
-package com.example.productivity
+package com.example.productivity.calendar
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.productivity.R
 
 
 sealed class ListItem

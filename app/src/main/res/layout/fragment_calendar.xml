@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#1B1A2F"
-    tools:context=".CalendarFragment">
+    tools:context=".calendar.CalendarFragment">
 
     <ImageButton
         android:id="@+id/btn_previous_month"

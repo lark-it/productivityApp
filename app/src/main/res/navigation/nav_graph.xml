@@ -6,13 +6,13 @@
 
     <fragment
         android:id="@+id/nav_goals"
-        android:name="com.example.productivity.GoalsFragment"
+        android:name="com.example.productivity.habits.HabitsFragment"
         android:label="Цели"
-        tools:layout="@layout/fragment_goals" />
+        tools:layout="@layout/fragment_habits" />
 
     <fragment
         android:id="@+id/nav_calendar"
-        android:name="com.example.productivity.CalendarFragment"
+        android:name="com.example.productivity.calendar.CalendarFragment"
         android:label="Календарь"
         tools:layout="@layout/fragment_calendar" />
 
@@ -33,5 +33,11 @@
         android:name="com.example.productivity.SettingsFragment"
         android:label="Настройки"
         tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/editHabitsFragment"
+        android:name="com.example.productivity.habits.EditHabitsFragment"
+        android:label="Редактирование привычек"
+        tools:layout="@layout/fragment_edit_habits" />
 
 </navigation>
