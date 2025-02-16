@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navController)
 
         bottomNavigationView.setOnItemReselectedListener { item ->
-            if (item.itemId == R.id.nav_goals) {
+            if (item.itemId == R.id.nav_home) {
                 supportFragmentManager.popBackStack() // Закрываем верхний фрагмент, если он открыт
             }
         }

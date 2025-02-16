@@ -2,9 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="Home" />
+
+    <item
         android:id="@+id/nav_goals"
         android:icon="@drawable/ic_goals"
-        android:title="Цели" />
+        android:title="Goals" />
 
     <item
         android:id="@+id/nav_calendar"
@@ -15,11 +20,6 @@
         android:id="@+id/nav_games"
         android:icon="@drawable/ic_game"
         android:title="Игра" />
-
-    <item
-        android:id="@+id/nav_analysis"
-        android:icon="@drawable/ic_analysis"
-        android:title="Анализ" />
 
     <item
         android:id="@+id/nav_settings"

@@ -1,16 +1,19 @@
 package com.example.productivity.habits
 
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.productivity.R
 
-sealed class HabitItem  {
+sealed class HabitItem {
     data class Header(val title: String) : HabitItem()
-    data class Habit(val id: Int, val title: String, val isCompleted: Boolean) : HabitItem()
+    data class Habit(val id: Int, val title: String, val isCompleted: Boolean, val iconResId: Int, val color: Int) : HabitItem()
 }
 
 class TodayAdapter(
@@ -51,15 +54,28 @@ class TodayAdapter(
     class HabitViewHolder(view: View, private val onHabitChecked: (HabitItem.Habit) -> Unit) : RecyclerView.ViewHolder(view) {
         private val title: TextView = view.findViewById(R.id.titleName)
         private val checkHabit: CheckBox = view.findViewById(R.id.checkHabit)
+        private val habitIcon: ImageView = view.findViewById(R.id.habitIcon)
+        private val linearHabit: LinearLayout = view.findViewById(R.id.linearHabit)
 
         fun bind(habit: HabitItem.Habit) {
             title.text = habit.title
+            habitIcon.setImageResource(habit.iconResId)
+
+            val background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = 30f
+                setColor(habit.color)
+            }
+            linearHabit.background = background
+
             checkHabit.setOnCheckedChangeListener(null)
             checkHabit.isChecked = habit.isCompleted
 
             checkHabit.setOnCheckedChangeListener { _, isChecked ->
-                onHabitChecked(habit.copy(isCompleted = isChecked)) // Передаем новое состояние
+                onHabitChecked(habit.copy(isCompleted = isChecked))
             }
+
+
         }
     }
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

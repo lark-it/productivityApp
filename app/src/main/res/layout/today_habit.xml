@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:id="@+id/linearHabit"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/habitIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:scaleType="centerCrop" />
 
     <TextView
-    android:id="@+id/titleName"
-    android:layout_width="0dp"
-    android:layout_height="match_parent"
-    android:layout_weight="1"
-    android:layout_marginStart="50dp"
-    android:gravity="center_vertical"
-    android:text="TextView"
-    android:textColor="#555555"
-    android:textSize="24sp"
-    android:textStyle="bold" />
+        android:id="@+id/titleName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="16sp" />
 
     <CheckBox
         android:id="@+id/checkHabit"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        />
+        android:layout_height="wrap_content" />
 </LinearLayout>

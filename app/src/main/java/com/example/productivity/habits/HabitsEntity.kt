@@ -6,5 +6,7 @@ import androidx.room.PrimaryKey
 data class HabitsEntity (
     @PrimaryKey(autoGenerate = true) val id: Int =0,
     val title: String,
-    val isCompleted:Boolean = false
+    val isCompleted:Boolean = false,
+    val iconResId: Int,
+    val color: Int
 )

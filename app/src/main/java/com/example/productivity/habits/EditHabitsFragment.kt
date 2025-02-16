@@ -44,11 +44,18 @@ class EditHabitsFragment : DialogFragment() {
         db = Room.databaseBuilder(requireContext(), AppDatabase::class.java, "habits-db").build()
         habitDao = db.habitsDao()
         val recyclerView = view?.findViewById<RecyclerView>(R.id.rv_edit_habits)
-        adapter = EditHabitsAdapter(habits,{ habit ->
-            editHabit(habit)
+        adapter = EditHabitsAdapter(habits, { habit ->
+            val bundle = Bundle().apply {
+                putInt("habitId", habit.id)
+                putString("habitTitle", habit.title)
+                putInt("iconResId", habit.iconResId)
+                putInt("habitColor", habit.color)
+            }
+            findNavController().navigate(R.id.editOneHabitFragment, bundle)
         }, { habit ->
             deleteHabit(habit)
         })
+
         recyclerView?.layoutManager = LinearLayoutManager(requireContext())
         recyclerView?.adapter = adapter
 
@@ -62,24 +69,6 @@ class EditHabitsFragment : DialogFragment() {
             habits.addAll(habitsFromDb)
             adapter.updateList(habits)
         }
-    }
-    private fun editHabit(habit: HabitsEntity){
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_habit, null)
-        val editText = dialogView.findViewById<EditText>(R.id.et_habit_title)
-        editText.setText(habit.title)
-
-        AlertDialog.Builder(requireContext())
-            .setTitle("Редактировать привычку")
-            .setView(dialogView)
-            .setPositiveButton("Сохранить"){ _, _ ->
-                val newTitle = editText.text.toString()
-                lifecycleScope.launch {
-                    habitDao.updateTitle(habit.id,newTitle)
-                    loadHabits()
-                }
-            }
-            .setNegativeButton("Отмена", null)
-            .show()
     }
     private fun deleteHabit(habit: HabitsEntity) {
         AlertDialog.Builder(requireContext())

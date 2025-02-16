@@ -43,10 +43,6 @@ class TodayFragment : Fragment(){
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         loadHabits()
-        //ждёт сигнал от HabitFragment что добавлена задача
-        parentFragmentManager.setFragmentResultListener("habitAdded", viewLifecycleOwner) { _, _ ->
-            loadHabits()
-        }
 
     }
     private fun loadHabits() {
@@ -57,13 +53,14 @@ class TodayFragment : Fragment(){
 
             sortedHabits.add(HabitItem.Header("Нужно сделать:"))
             sortedHabits.addAll(habitsFromDb.filter { !it.isCompleted }
-                .map { HabitItem.Habit(it.id, it.title, it.isCompleted) })
+                .map { HabitItem.Habit(it.id, it.title, it.isCompleted, it.iconResId, it.color) })
 
             sortedHabits.add(HabitItem.Header("Выполненные:"))
             sortedHabits.addAll(habitsFromDb.filter { it.isCompleted }
-                .map { HabitItem.Habit(it.id, it.title, it.isCompleted) })
+                .map { HabitItem.Habit(it.id, it.title, it.isCompleted, it.iconResId, it.color) })
 
             adapter.updateList(sortedHabits)
         }
     }
+
 }

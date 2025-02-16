@@ -20,8 +20,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 
 class HabitsFragment : Fragment() {
-    private lateinit var db: AppDatabase
-    private lateinit var habitDao: HabitsDao
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,39 +42,13 @@ class HabitsFragment : Fragment() {
         btnWeekly.setOnClickListener { replaceFragment(WeeklyFragment()) }
         btnOverall.setOnClickListener { replaceFragment(OverallFragment()) }
 
-        db = Room.databaseBuilder(
-            requireContext(),
-            AppDatabase::class.java,
-            "habits-db")
-            .build()
-        habitDao = db.habitsDao()
-
         val fabAddHabit = view.findViewById<FloatingActionButton>(R.id.fab_add_habit)
         fabAddHabit.setOnClickListener {
-            openHabitsDialog()
+            findNavController().navigate(R.id.AddHabitsFragment)
         }
         val btnEdit = view.findViewById<ImageButton>(R.id.btn_edit)
         btnEdit.setOnClickListener {openEditHabitsFragment()}
 
-    }
-
-    private fun openHabitsDialog(){
-        val input = EditText(requireContext())
-        input.hint = "Введите название"
-
-        AlertDialog.Builder(requireContext())
-            .setTitle("Добавить привычку")
-            .setView(input)
-            .setPositiveButton("Добавить") { _, _ ->
-                val habitTitle = input.text.toString()
-                lifecycleScope.launch {
-                    habitDao.insertHabit(HabitsEntity(title = habitTitle))
-                   // отправляет сигнал в TodayFragment
-                    parentFragmentManager.setFragmentResult("habitAdded", Bundle())
-                }
-            }
-            .setNegativeButton("Отмена", null)
-            .show()
     }
 
     private fun replaceFragment(fragment: Fragment){

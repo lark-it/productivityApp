@@ -2,36 +2,36 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/nav_goals">
+    app:startDestination="@id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.productivity.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_goals"
         android:name="com.example.productivity.habits.HabitsFragment"
-        android:label="Цели"
+        android:label="Goals"
         tools:layout="@layout/fragment_habits" />
 
     <fragment
         android:id="@+id/nav_calendar"
         android:name="com.example.productivity.calendar.CalendarFragment"
-        android:label="Календарь"
+        android:label="Calendar"
         tools:layout="@layout/fragment_calendar" />
 
     <fragment
         android:id="@+id/nav_games"
         android:name="com.example.productivity.GamesFragment"
-        android:label="Игра"
+        android:label="Game"
         tools:layout="@layout/fragment_games" />
-
-    <fragment
-        android:id="@+id/nav_analysis"
-        android:name="com.example.productivity.AnalysisFragment"
-        android:label="Анализ"
-        tools:layout="@layout/fragment_analysis" />
 
     <fragment
         android:id="@+id/nav_settings"
         android:name="com.example.productivity.SettingsFragment"
-        android:label="Настройки"
+        android:label="Settings"
         tools:layout="@layout/fragment_settings" />
 
     <fragment
@@ -39,5 +39,31 @@
         android:name="com.example.productivity.habits.EditHabitsFragment"
         android:label="Редактирование привычек"
         tools:layout="@layout/fragment_edit_habits" />
+
+    <fragment
+        android:id="@+id/AddHabitsFragment"
+        android:name="com.example.productivity.habits.AddHabitsFragment"
+        android:label="Добавление привычек"
+        tools:layout="@layout/fragment_add_habits" />
+
+    <fragment
+        android:id="@+id/editOneHabitFragment"
+        android:name="com.example.productivity.habits.EditOneHabitFragment"
+        android:label="Редактировать привычку"
+        tools:layout="@layout/fragment_edit_one_habit">
+        <argument
+            android:name="habitId"
+            app:argType="integer" />
+        <argument
+            android:name="habitTitle"
+            app:argType="string" />
+        <argument
+            android:name="iconResId"
+            app:argType="integer" />
+        <argument
+            android:name="habitColor"
+            app:argType="integer" />
+    </fragment>
+
 
 </navigation>
