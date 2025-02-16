@@ -1,6 +1,8 @@
 package com.example.productivity.habits
 
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
+import android.widget.ToggleButton
 import androidx.appcompat.app.ActionBar.LayoutParams
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContentProviderCompat.requireContext
@@ -26,6 +29,8 @@ import kotlinx.coroutines.launch
 
 class AddHabitsFragment : BaseHabitFragment() {
     private lateinit var db: AppDatabase
+    private var selectedRepeatType: RepeatType = RepeatType.DAILY
+    private lateinit var daysOfWeekGrid: GridLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +59,42 @@ class AddHabitsFragment : BaseHabitFragment() {
         view.findViewById<ImageButton>(R.id.buttonBack).setOnClickListener {
             findNavController().navigateUp()
         }
+
+        //работаем с выбором типа повторения, выделил комменатрием, чтобы не захламлять
+        val buttonDaily = view.findViewById<ToggleButton>(R.id.buttonDaily)
+        val buttonWeekly = view.findViewById<ToggleButton>(R.id.buttonWeekly)
+        val buttonMonthly = view.findViewById<ToggleButton>(R.id.buttonMonthly)
+
+        daysOfWeekGrid = view.findViewById(R.id.daysOfWeekGrid)
+
+        buttonDaily.isChecked = true
+        showWeeklyDays(false)
+        createWeekButtons()
+
+        buttonDaily.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                selectedRepeatType = RepeatType.DAILY
+                buttonWeekly.isChecked = false
+                buttonMonthly.isChecked = false
+                showWeeklyDays(false)
+            }
+        }
+        buttonWeekly.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                selectedRepeatType = RepeatType.WEEKLY
+                buttonDaily.isChecked = false
+                buttonMonthly.isChecked = false
+                showWeeklyDays(true)
+            }
+        }
+        buttonMonthly.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                selectedRepeatType = RepeatType.MONTHLY
+                buttonDaily.isChecked = false
+                buttonWeekly.isChecked = false
+                showWeeklyDays(false)
+            }
+        }
     }
 
     private fun saveHabit(view: View) {
@@ -62,7 +103,9 @@ class AddHabitsFragment : BaseHabitFragment() {
             val newHabit = HabitsEntity(
                 title = habitTitle,
                 iconResId = selectedIcon!!,
-                color = selectedColor!!
+                color = selectedColor!!,
+                repeatType = selectedRepeatType,
+                repeatDays = selectedDays
             )
             lifecycleScope.launch {
                 db.habitsDao().insertHabit(newHabit)
@@ -72,5 +115,35 @@ class AddHabitsFragment : BaseHabitFragment() {
             Toast.makeText(requireContext(), "Выберите иконку и цвет!", Toast.LENGTH_SHORT).show()
         }
     }
+    private val selectedDays = mutableListOf<Int>()
+    private fun createWeekButtons() {
+        val daysGrid = view?.findViewById<GridLayout>(R.id.daysOfWeekGrid) ?: return
+        val daysNames = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС")
+
+        for ((index, day) in daysNames.withIndex()) {
+            val button = Button(requireContext()).apply {
+                text = day
+                setOnClickListener {
+                    toggleDaySelection(index + 1, this)
+                }
+            }
+            daysGrid.addView(button)
+        }
+    }
+    private fun toggleDaySelection(day: Int, button: Button) {
+        if (selectedDays.contains(day)) {
+            selectedDays.remove(day)
+            button.setBackgroundColor(Color.LTGRAY)
+        } else {
+            selectedDays.add(day)
+            button.setBackgroundColor(Color.GREEN)
+        }
+        Log.d("RepeatDays", "Выбранные дни недели: $selectedDays")
+    }
+
+    private fun showWeeklyDays(show: Boolean){
+        daysOfWeekGrid.visibility = if (show) View.VISIBLE else View.GONE
+    }
+
 }
 

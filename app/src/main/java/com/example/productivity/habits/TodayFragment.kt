@@ -1,6 +1,7 @@
 package com.example.productivity.habits
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,18 +50,45 @@ class TodayFragment : Fragment(){
         lifecycleScope.launch {
             val habitsFromDb = habitDao.getAllHabits()
 
+            val today = java.util.Calendar.getInstance()
+            var dayOfWeek = today.get(java.util.Calendar.DAY_OF_WEEK) // 1 = Sunday, 7 = Saturday
+            if (dayOfWeek == 1) dayOfWeek = 7 //7 = Sunday
+            else dayOfWeek -= 1 //1 = Monday, 7 = Sunday
+
+            val dayOfMonth = today.get(java.util.Calendar.DAY_OF_MONTH)
+
+            val filteredHabits = habitsFromDb.filter { habit ->
+                Log.d("FILTERING", "Habit: ${habit.title}, repeatType: ${habit.repeatType}, repeatDays: ${habit.repeatDays}")
+
+                when (habit.repeatType) {
+                    RepeatType.DAILY -> {
+                        val result = habit.repeatDays.isNullOrEmpty() || habit.repeatDays.contains(dayOfWeek)
+                        result
+                    }
+                    RepeatType.WEEKLY -> {
+                        val result = habit.repeatDays?.contains(dayOfWeek) ?: false
+                        result
+                    }
+                    RepeatType.MONTHLY -> {
+                        val result = habit.repeatDays?.contains(dayOfMonth) ?: false
+                        result
+                    }
+                }
+            }
+
             val sortedHabits = mutableListOf<HabitItem>()
 
             sortedHabits.add(HabitItem.Header("Нужно сделать:"))
-            sortedHabits.addAll(habitsFromDb.filter { !it.isCompleted }
+            sortedHabits.addAll(filteredHabits.filter { !it.isCompleted }
                 .map { HabitItem.Habit(it.id, it.title, it.isCompleted, it.iconResId, it.color) })
 
             sortedHabits.add(HabitItem.Header("Выполненные:"))
-            sortedHabits.addAll(habitsFromDb.filter { it.isCompleted }
+            sortedHabits.addAll(filteredHabits.filter { it.isCompleted }
                 .map { HabitItem.Habit(it.id, it.title, it.isCompleted, it.iconResId, it.color) })
 
             adapter.updateList(sortedHabits)
         }
     }
+
 
 }
