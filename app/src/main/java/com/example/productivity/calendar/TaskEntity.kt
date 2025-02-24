@@ -2,6 +2,7 @@ package com.example.productivity.calendar
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.productivity.habits.HabitsEntity
 
 @Entity(tableName = "tasks")
 data class TaskEntity(
@@ -12,3 +13,5 @@ data class TaskEntity(
     val importance: Int,
     val isCompleted: Boolean = false
 )
+
+

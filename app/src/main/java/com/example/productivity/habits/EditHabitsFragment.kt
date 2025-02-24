@@ -50,6 +50,8 @@ class EditHabitsFragment : DialogFragment() {
                 putString("habitTitle", habit.title)
                 putInt("iconResId", habit.iconResId)
                 putInt("habitColor", habit.color)
+                putParcelable("repeatType", habit.repeatType)
+                putIntegerArrayList("repeatDays", habit.repeatDays?.let { ArrayList(it) })
             }
             findNavController().navigate(R.id.editOneHabitFragment, bundle)
         }, { habit ->

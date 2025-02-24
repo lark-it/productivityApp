@@ -16,8 +16,10 @@ interface HabitsDao {
     @Query("UPDATE habits SET isCompleted = :isCompleted WHERE id = :habitId")
     suspend fun updateHabit(habitId: Int, isCompleted: Boolean)
 
-    @Query("UPDATE habits SET title = :newTitle, iconResId = :newIcon, color = :newColor WHERE id = :habitId")
-    suspend fun updateHabit(habitId: Int, newTitle: String, newIcon: Int, newColor: Int)
+    @Query("UPDATE habits SET title = :title, iconResId = :iconResId, color = :color," +
+            " repeatType = :repeatType, repeatDays = :repeatDays WHERE id = :id")
+    suspend fun updateHabit(id: Int, title: String, iconResId: Int, color: Int, repeatType: RepeatType, repeatDays: List<Int>)
+
 
     @Delete
     suspend fun deleteHabit(habit: HabitsEntity)

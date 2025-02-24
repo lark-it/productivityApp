@@ -3,6 +3,8 @@ package com.example.productivity.habits
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "habits")
 data class HabitsEntity (
@@ -12,9 +14,11 @@ data class HabitsEntity (
     val iconResId: Int,
     val color: Int,
     val repeatType: RepeatType,
-    val repeatDays: List<Int>? = null
+    val repeatDays: List<Int>? = null,
+    val startDate: String
 )
 
-enum class RepeatType {
+@Parcelize
+enum class RepeatType : Parcelable {
     DAILY, WEEKLY, MONTHLY
 }

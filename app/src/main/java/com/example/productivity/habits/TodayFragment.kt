@@ -13,6 +13,10 @@ import androidx.room.Room
 import com.example.productivity.AppDatabase
 import com.example.productivity.R
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.Date
+import java.util.Locale
 
 class TodayFragment : Fragment(){
     private lateinit var adapter: TodayAdapter
@@ -46,6 +50,7 @@ class TodayFragment : Fragment(){
         loadHabits()
 
     }
+
     private fun loadHabits() {
         lifecycleScope.launch {
             val habitsFromDb = habitDao.getAllHabits()
@@ -56,8 +61,14 @@ class TodayFragment : Fragment(){
             else dayOfWeek -= 1 //1 = Monday, 7 = Sunday
 
             val dayOfMonth = today.get(java.util.Calendar.DAY_OF_MONTH)
+            val todayDate = LocalDate.now()
 
             val filteredHabits = habitsFromDb.filter { habit ->
+                val habitStartDate = LocalDate.parse(habit.startDate)
+                if (habitStartDate > todayDate) {
+                    return@filter false
+                }
+
                 Log.d("FILTERING", "Habit: ${habit.title}, repeatType: ${habit.repeatType}, repeatDays: ${habit.repeatDays}")
 
                 when (habit.repeatType) {

@@ -10,7 +10,7 @@ import com.example.productivity.calendar.TaskEntity
 import com.example.productivity.habits.HabitsDao
 import com.example.productivity.habits.HabitsEntity
 
-@Database(entities = [TaskEntity::class, HabitsEntity::class], version = 6)
+@Database(entities = [TaskEntity::class, HabitsEntity::class], version = 7)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao

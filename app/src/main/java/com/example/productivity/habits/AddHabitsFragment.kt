@@ -1,17 +1,21 @@
 package com.example.productivity.habits
 
+import android.app.DatePickerDialog
 import android.graphics.Color
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.GridLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.appcompat.app.ActionBar.LayoutParams
@@ -31,6 +35,7 @@ class AddHabitsFragment : BaseHabitFragment() {
     private lateinit var db: AppDatabase
     private var selectedRepeatType: RepeatType = RepeatType.DAILY
     private lateinit var daysOfWeekGrid: GridLayout
+    private var startDate: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -95,6 +100,26 @@ class AddHabitsFragment : BaseHabitFragment() {
                 showWeeklyDays(false)
             }
         }
+
+        //DatePicker
+        val btnPickStartDate = view.findViewById<Button>(R.id.btnPickStartDate)
+        val tvStartDate = view.findViewById<TextView>(R.id.tvStartDate)
+
+        btnPickStartDate.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val datePicker = DatePickerDialog(
+                requireContext(),
+                { _, year, month, dayOfMonth ->
+                    val selectedDate = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth)
+                    startDate = selectedDate
+                    tvStartDate.text = "Дата начала: $startDate"
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+            datePicker.show()
+        }
     }
 
     private fun saveHabit(view: View) {
@@ -105,7 +130,8 @@ class AddHabitsFragment : BaseHabitFragment() {
                 iconResId = selectedIcon!!,
                 color = selectedColor!!,
                 repeatType = selectedRepeatType,
-                repeatDays = selectedDays
+                repeatDays = selectedDays,
+                startDate = startDate ?: getCurrentDate()
             )
             lifecycleScope.launch {
                 db.habitsDao().insertHabit(newHabit)
@@ -143,6 +169,10 @@ class AddHabitsFragment : BaseHabitFragment() {
 
     private fun showWeeklyDays(show: Boolean){
         daysOfWeekGrid.visibility = if (show) View.VISIBLE else View.GONE
+    }
+    private fun getCurrentDate(): String {
+        val calendar = Calendar.getInstance()
+        return "${calendar.get(Calendar.YEAR)}-${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.DAY_OF_MONTH)}"
     }
 
 }

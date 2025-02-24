@@ -20,13 +20,11 @@ class CalendarAdapter(
 
     private var selectedPosition = RecyclerView.NO_POSITION
 
-    // Создание ячейки (привязываем макет)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_day, parent, false)
         return CalendarViewHolder(view)
     }
 
-    // Привязка данных к ячейке
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
         val day = days[position]
         holder.dayText.text = day
@@ -50,10 +48,9 @@ class CalendarAdapter(
             holder.dayText.setTextColor(holder.itemView.context.getColor(android.R.color.white))
             holder.dayText.textSize = 16f
 
-            // Проверяем текущую дату
             val isToday = day.toIntOrNull() == currentDate.get(Calendar.DAY_OF_MONTH) &&
-                    currentDate.get(Calendar.MONTH) == displayedMonth && // Проверяем месяц
-                    currentDate.get(Calendar.YEAR) == displayedYear     // Проверяем год
+                    currentDate.get(Calendar.MONTH) == displayedMonth &&
+                    currentDate.get(Calendar.YEAR) == displayedYear
 
             if (isToday) {
                 holder.dayText.setBackgroundResource(R.drawable.bg_current_day)

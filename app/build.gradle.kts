@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-kapt")
+    id ("kotlin-parcelize")
 }
 
 android {
@@ -10,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.productivity"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -38,7 +39,7 @@ android {
 
 dependencies {
     implementation (libs.androidx.room.ktx)
-
+    implementation (libs.kotlin.parcelize.runtime)
     implementation (libs.androidx.room.runtime)
     implementation(libs.androidx.gridlayout)
     kapt(libs.androidx.room.compiler)
