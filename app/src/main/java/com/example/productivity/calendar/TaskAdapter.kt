@@ -19,7 +19,12 @@ sealed class CalendarItem {
     data class HabitItem(val habit: HabitsEntity) : CalendarItem()
 }
 
-class TaskAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TaskAdapter(
+    private val onTaskChecked: (TaskEntity, Boolean) -> Unit,
+    private val onTaskEdit: (TaskEntity) -> Unit,
+    private val onTaskDelete: (TaskEntity) -> Unit,
+    private val onHabitChecked: (HabitsEntity, String, Boolean) -> Unit // ✅ Добавлен параметр
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val items = mutableListOf<CalendarItem>()
 
@@ -34,6 +39,7 @@ class TaskAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             is CalendarItem.DateHeader -> 0
             is CalendarItem.TaskItem -> 1
             is CalendarItem.HabitItem -> 2
+            else -> throw IllegalArgumentException("Unknown item type") // ✅ Исправляем ошибку
         }
     }
 
@@ -41,8 +47,8 @@ class TaskAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             0 -> DateHeaderViewHolder(inflater.inflate(R.layout.item_header, parent, false))
-            1 -> TaskViewHolder(inflater.inflate(R.layout.item_task, parent, false))
-            2 -> HabitViewHolder(inflater.inflate(R.layout.item_habit, parent, false))
+            1 -> TaskViewHolder(inflater.inflate(R.layout.item_task, parent, false), onTaskChecked, onTaskEdit, onTaskDelete)
+            2 -> HabitViewHolder(inflater.inflate(R.layout.item_habit_calendar, parent, false), onHabitChecked)
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -51,9 +57,10 @@ class TaskAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         when (val item = items[position]) {
             is CalendarItem.DateHeader -> (holder as DateHeaderViewHolder).bind(item)
             is CalendarItem.TaskItem -> (holder as TaskViewHolder).bind(item.task)
-            is CalendarItem.HabitItem -> (holder as HabitViewHolder).bind(item.habit)
+            is CalendarItem.HabitItem -> (holder as HabitViewHolder).bind(item.habit, item.habit.startDate)
         }
     }
+
 
     override fun getItemCount(): Int = items.size
 
@@ -65,29 +72,53 @@ class TaskAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    // Элемент задачи
-    class TaskViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+    class TaskViewHolder(
+        view: View,
+        private val onTaskChecked: (TaskEntity, Boolean) -> Unit,
+        private val onTaskEdit: (TaskEntity) -> Unit,
+        private val onTaskDelete: (TaskEntity) -> Unit
+    ) : RecyclerView.ViewHolder(view) {
         private val textView: TextView = view.findViewById(R.id.tv_task_title)
         private val checkBox: CheckBox = view.findViewById(R.id.checkBox)
-        private val taskTime: TextView = view.findViewById(R.id.tv_task_time)
-        private val importance: TextView = view.findViewById(R.id.tv_important)
+        private val editButton: ImageButton = view.findViewById(R.id.edit_button)
+        private val deleteButton: ImageButton = view.findViewById(R.id.delete_button)
 
         fun bind(task: TaskEntity) {
             textView.text = task.title
+            checkBox.setOnCheckedChangeListener(null)
             checkBox.isChecked = task.isCompleted
-            taskTime.text = task.time ?: ""
-            importance.text = task.importance.toString()
+
+            checkBox.setOnCheckedChangeListener { _, isChecked ->
+                onTaskChecked(task, isChecked)
+            }
+
+            editButton.setOnClickListener {
+                onTaskEdit(task)
+            }
+
+            deleteButton.setOnClickListener {
+                onTaskDelete(task)
+            }
         }
     }
 
-    // Элемент привычки
-    class HabitViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+    class HabitViewHolder(view: View, private val onHabitChecked: (HabitsEntity, String, Boolean) -> Unit) : RecyclerView.ViewHolder(view) {
         private val textView: TextView = view.findViewById(R.id.habitTitle)
         private val icon: ImageView = view.findViewById(R.id.habitIcon)
+        private val checkBox: CheckBox = view.findViewById(R.id.checkHabitCalendar)
 
-        fun bind(habit: HabitsEntity) {
+        fun bind(habit: HabitsEntity, date: String) {
             textView.text = habit.title
             icon.setImageResource(habit.iconResId)
+
+            checkBox.setOnCheckedChangeListener(null)
+            checkBox.isChecked = habit.isCompleted
+
+            checkBox.setOnCheckedChangeListener { _, isChecked ->
+                onHabitChecked(habit, date, isChecked)
+            }
         }
     }
 }

@@ -10,16 +10,21 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.productivity.AppDatabase
 import com.example.productivity.OnDayClickListener
 import com.example.productivity.R
+import com.example.productivity.habits.HabitCompletionEntity
+import com.example.productivity.habits.HabitsEntity
+import com.example.productivity.habits.RepeatType
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class CalendarFragment : Fragment() {
@@ -61,18 +66,77 @@ class CalendarFragment : Fragment() {
             loadTasksAndHabits()
         }
 
-        val rvTaskList = view.findViewById<RecyclerView>(R.id.rv_task_list) // ✅ Исправлено!
+        val rvTaskList = view.findViewById<RecyclerView>(R.id.rv_task_list)
         rvTaskList.layoutManager = LinearLayoutManager(requireContext())
-        taskAdapter = TaskAdapter()
+
+        taskAdapter = TaskAdapter(
+            onTaskChecked = { task, isChecked -> updateTaskCompletion(task, isChecked) },
+            onTaskEdit = { task -> navigateToEditTask(task) },
+            onTaskDelete = { task -> deleteTask(task) },
+            onHabitChecked = { habit, date, isChecked -> updateHabitCompletion(habit, date, isChecked) } // ✅ Добавили параметр
+        )
+
+
+
+
         rvTaskList.adapter = taskAdapter
 
         val fabAddTask = view.findViewById<FloatingActionButton>(R.id.fab_add_task)
         fabAddTask.setOnClickListener {
-            showAddTaskDialog()
+            findNavController().navigate(R.id.AddTasksFragment)
         }
+
+
 
         loadTasksAndHabits()
     }
+    private fun updateHabitCompletion(habit: HabitsEntity, date: String, isCompleted: Boolean) {
+        lifecycleScope.launch {
+            val completionDao = AppDatabase.getDatabase(requireContext()).habitCompletionDao()
+
+            if (isCompleted) {
+                completionDao.insertCompletion(HabitCompletionEntity(habit.id, date, true))
+            } else {
+                completionDao.deleteCompletion(habit.id, date)
+            }
+
+            loadTasksAndHabits() // Обновляем список после изменения
+        }
+    }
+    private fun navigateToEditTask(task: TaskEntity) {
+        val bundle = Bundle().apply {
+            putInt("taskId", task.id)
+            putString("taskTitle", task.title)
+            putString("taskDate", task.date)
+            putString("taskTime", task.time ?: "")
+            putInt("taskImportance", task.importance)
+            putBoolean("taskCompleted", task.isCompleted)
+        }
+        findNavController().navigate(R.id.editTaskFragment, bundle)
+    }
+
+
+
+    private fun updateTaskCompletion(task: TaskEntity, isCompleted: Boolean) {
+        lifecycleScope.launch {
+            val taskDao = AppDatabase.getDatabase(requireContext()).taskDao()
+            val updatedTask = task.copy(isCompleted = isCompleted)
+            taskDao.insertTask(updatedTask) // Обновляем в базе
+
+            loadTasksAndHabits() // Обновляем UI
+        }
+    }
+
+    private fun deleteTask(task: TaskEntity) {
+        lifecycleScope.launch {
+            val taskDao = AppDatabase.getDatabase(requireContext()).taskDao()
+            taskDao.deleteTask(task)
+
+            loadTasksAndHabits() // Обновляем UI после удаления
+        }
+    }
+
+
 
     private fun updateMonthYearText(view: View) {
         val formatter = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
@@ -128,64 +192,70 @@ class CalendarFragment : Fragment() {
         lifecycleScope.launch {
             val taskDao = AppDatabase.getDatabase(requireContext()).taskDao()
             val habitDao = AppDatabase.getDatabase(requireContext()).habitsDao()
+            val completionDao = AppDatabase.getDatabase(requireContext()).habitCompletionDao()
 
-            val tasks = taskDao.getAllTasks().groupBy { it.date }
-            val habits = habitDao.getAllHabits().groupBy { it.startDate }
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH) + 1
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
+            val tasks = taskDao.getAllTasks().filter { task ->
+                val taskDate = task.date.split("-")
+                val taskYear = taskDate[0].toInt()
+                val taskMonth = taskDate[1].toInt()
+                taskYear == year && taskMonth == month
+            }.groupBy { it.date }
+
+            val habits = habitDao.getAllHabits()
             val mergedData = mutableListOf<CalendarItem>()
+            val uniqueDates = mutableSetOf<String>()
 
-            val uniqueDates = (tasks.keys + habits.keys).sorted()
+            val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+            val tempCalendar = Calendar.getInstance()
+            tempCalendar.set(year, calendar.get(Calendar.MONTH), 1)
 
-            for (date in uniqueDates) {
+            val habitsByDate = mutableMapOf<String, MutableList<HabitsEntity>>()
+
+            for (habit in habits) {
+                val startDate = dateFormat.parse(habit.startDate) ?: continue
+                tempCalendar.time = startDate
+
+                while (tempCalendar.get(Calendar.YEAR) == year && tempCalendar.get(Calendar.MONTH) + 1 == month) {
+                    val dateKey = dateFormat.format(tempCalendar.time)
+                    val dayOfWeek = tempCalendar.get(Calendar.DAY_OF_WEEK) - 1
+
+                    val isHabitDay = when (habit.repeatType) {
+                        RepeatType.DAILY -> true
+                        RepeatType.WEEKLY -> habit.repeatDays?.contains(dayOfWeek) == true
+                        RepeatType.MONTHLY -> tempCalendar.get(Calendar.DAY_OF_MONTH) == startDate.date
+                    }
+
+                    if (isHabitDay) {
+                        uniqueDates.add(dateKey)
+                        val isCompleted = completionDao.isHabitCompleted(habit.id, dateKey) ?: false
+                        val updatedHabit = habit.copy(isCompleted = isCompleted)
+                        habitsByDate.getOrPut(dateKey) { mutableListOf() }.add(updatedHabit)
+                    }
+
+                    tempCalendar.add(Calendar.DAY_OF_MONTH, 1)
+                }
+            }
+
+            uniqueDates.addAll(tasks.keys)
+            val sortedDates = uniqueDates.sorted()
+
+            for (date in sortedDates) {
                 mergedData.add(CalendarItem.DateHeader(date))
+
+                habitsByDate[date]?.let { habitList ->
+                    mergedData.addAll(habitList.map { CalendarItem.HabitItem(it) })
+                }
 
                 tasks[date]?.let { taskList ->
                     mergedData.addAll(taskList.map { CalendarItem.TaskItem(it) })
                 }
-
-                habits[date]?.let { habitList ->
-                    mergedData.addAll(habitList.map { CalendarItem.HabitItem(it) })
-                }
             }
 
             taskAdapter.submitList(mergedData)
-        }
-    }
-    private fun showAddTaskDialog() {
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_task, null)
-        val taskTitleInput = dialogView.findViewById<EditText>(R.id.et_task_title)
-
-        AlertDialog.Builder(requireContext())
-            .setTitle("Добавить задачу")
-            .setView(dialogView)
-            .setPositiveButton("Добавить") { _, _ ->
-                val taskTitle = taskTitleInput.text.toString().trim()
-                if (taskTitle.isNotEmpty()) {
-                    saveTaskToDatabase(taskTitle)
-                }
-            }
-            .setNegativeButton("Отмена", null)
-            .show()
-    }
-    private fun saveTaskToDatabase(title: String) {
-        lifecycleScope.launch {
-            val taskDao = AppDatabase.getDatabase(requireContext()).taskDao()
-
-            // Используем текущую дату как дату задачи (или можно добавить выбор даты в диалог)
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val currentDate = dateFormat.format(Calendar.getInstance().time)
-
-            val newTask = TaskEntity(
-                title = title,
-                date = currentDate,
-                time = null,
-                importance = 1,
-                isCompleted = false
-            )
-
-            taskDao.insertTask(newTask)
-
-            loadTasksAndHabits()
         }
     }
 

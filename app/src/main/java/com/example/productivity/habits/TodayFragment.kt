@@ -15,14 +15,16 @@ import com.example.productivity.R
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class TodayFragment : Fragment(){
+class TodayFragment : Fragment() {
     private lateinit var adapter: TodayAdapter
     private var habits = mutableListOf<HabitItem>()
     private lateinit var db: AppDatabase
     private lateinit var habitDao: HabitsDao
+    private lateinit var habitCompletionDao: HabitCompletionDao
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,71 +37,68 @@ class TodayFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        db = Room.databaseBuilder(requireContext(), AppDatabase::class.java, "habits-db").build()
+        db = AppDatabase.getDatabase(requireContext())
         habitDao = db.habitsDao()
+        habitCompletionDao = db.habitCompletionDao()
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.rv_today)
         adapter = TodayAdapter(habits) { updatedHabit ->
             lifecycleScope.launch {
-                habitDao.updateHabit(updatedHabit.id, updatedHabit.isCompleted)
+                val todayDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
+                if (updatedHabit.isCompleted) {
+                    habitCompletionDao.insertCompletion(HabitCompletionEntity(updatedHabit.id, todayDate, true))
+                } else {
+                    habitCompletionDao.deleteCompletion(updatedHabit.id, todayDate)
+                }
+
                 loadHabits()
             }
         }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         loadHabits()
-
     }
+
 
     private fun loadHabits() {
         lifecycleScope.launch {
             val habitsFromDb = habitDao.getAllHabits()
 
-            val today = java.util.Calendar.getInstance()
-            var dayOfWeek = today.get(java.util.Calendar.DAY_OF_WEEK) // 1 = Sunday, 7 = Saturday
-            if (dayOfWeek == 1) dayOfWeek = 7 //7 = Sunday
-            else dayOfWeek -= 1 //1 = Monday, 7 = Sunday
+            val today = Calendar.getInstance()
+            var dayOfWeek = today.get(Calendar.DAY_OF_WEEK) - 1 // 0 = Sunday, 6 = Saturday
+            if (dayOfWeek == -1) dayOfWeek = 6 // Переносим воскресенье в конец
+            val dayOfMonth = today.get(Calendar.DAY_OF_MONTH)
+            val todayDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(today.time)
 
-            val dayOfMonth = today.get(java.util.Calendar.DAY_OF_MONTH)
-            val todayDate = LocalDate.now()
+            val sortedHabits = mutableListOf<HabitItem>()
+            sortedHabits.add(HabitItem.Header("Нужно сделать:"))
 
-            val filteredHabits = habitsFromDb.filter { habit ->
-                val habitStartDate = LocalDate.parse(habit.startDate)
-                if (habitStartDate > todayDate) {
+            val habitsToShow = habitsFromDb.filter { habit ->
+                // ✅ Добавляем проверку, что `startDate` не в будущем
+                val habitStartDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(habit.startDate)
+                if (habitStartDate != null && habitStartDate.after(today.time)) {
                     return@filter false
                 }
 
-                Log.d("FILTERING", "Habit: ${habit.title}, repeatType: ${habit.repeatType}, repeatDays: ${habit.repeatDays}")
-
-                when (habit.repeatType) {
-                    RepeatType.DAILY -> {
-                        val result = habit.repeatDays.isNullOrEmpty() || habit.repeatDays.contains(dayOfWeek)
-                        result
-                    }
-                    RepeatType.WEEKLY -> {
-                        val result = habit.repeatDays?.contains(dayOfWeek) ?: false
-                        result
-                    }
-                    RepeatType.MONTHLY -> {
-                        val result = habit.repeatDays?.contains(dayOfMonth) ?: false
-                        result
-                    }
+                val isHabitDay = when (habit.repeatType) {
+                    RepeatType.DAILY -> true
+                    RepeatType.WEEKLY -> habit.repeatDays?.contains(dayOfWeek) == true
+                    RepeatType.MONTHLY -> dayOfMonth in (habit.repeatDays ?: emptyList())
                 }
+
+                isHabitDay
+            }.map { habit ->
+                val isCompleted = habitCompletionDao.isHabitCompleted(habit.id, todayDate) ?: false
+                HabitItem.Habit(habit.id, habit.title, isCompleted, habit.iconResId, habit.color)
             }
 
-            val sortedHabits = mutableListOf<HabitItem>()
-
-            sortedHabits.add(HabitItem.Header("Нужно сделать:"))
-            sortedHabits.addAll(filteredHabits.filter { !it.isCompleted }
-                .map { HabitItem.Habit(it.id, it.title, it.isCompleted, it.iconResId, it.color) })
-
+            sortedHabits.addAll(habitsToShow.filter { !it.isCompleted })
             sortedHabits.add(HabitItem.Header("Выполненные:"))
-            sortedHabits.addAll(filteredHabits.filter { it.isCompleted }
-                .map { HabitItem.Habit(it.id, it.title, it.isCompleted, it.iconResId, it.color) })
+            sortedHabits.addAll(habitsToShow.filter { it.isCompleted })
 
             adapter.updateList(sortedHabits)
         }
     }
-
 
 }

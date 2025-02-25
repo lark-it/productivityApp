@@ -45,6 +45,11 @@
         android:name="com.example.productivity.habits.AddHabitsFragment"
         android:label="Добавление привычек"
         tools:layout="@layout/fragment_add_habits" />
+    <fragment
+        android:id="@+id/AddTasksFragment"
+        android:name="com.example.productivity.calendar.AddTasksFragment"
+        android:label="Добавление задач"
+        tools:layout="@layout/fragment_add_tasks" />
 
     <fragment
         android:id="@+id/editOneHabitFragment"
@@ -64,6 +69,32 @@
             android:name="habitColor"
             app:argType="integer" />
     </fragment>
+
+    <fragment
+        android:id="@+id/editTaskFragment"
+        android:name="com.example.productivity.calendar.EditTaskFragment"
+        android:label="Редактировать задачу"
+        tools:layout="@layout/fragment_edit_task">
+        <argument
+            android:name="taskId"
+            app:argType="integer" />
+        <argument
+            android:name="taskTitle"
+            app:argType="string" />
+        <argument
+            android:name="taskDate"
+            app:argType="string" />
+        <argument
+            android:name="taskTime"
+            app:argType="string" />
+        <argument
+            android:name="taskImportance"
+            app:argType="integer" />
+        <argument
+            android:name="taskCompleted"
+            app:argType="boolean" />
+    </fragment>
+
 
 
 </navigation>

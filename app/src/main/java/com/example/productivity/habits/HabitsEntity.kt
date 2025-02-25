@@ -22,3 +22,4 @@ data class HabitsEntity (
 enum class RepeatType : Parcelable {
     DAILY, WEEKLY, MONTHLY
 }
+
