@@ -36,7 +36,7 @@
 
     <fragment
         android:id="@+id/editHabitsFragment"
-        android:name="com.example.productivity.habits.EditHabitsFragment"
+        android:name="com.example.productivity.habits.edit.EditHabitsFragment"
         android:label="Редактирование привычек"
         tools:layout="@layout/fragment_edit_habits" />
 
@@ -53,7 +53,7 @@
 
     <fragment
         android:id="@+id/editOneHabitFragment"
-        android:name="com.example.productivity.habits.EditOneHabitFragment"
+        android:name="com.example.productivity.habits.edit.EditOneHabitFragment"
         android:label="Редактировать привычку"
         tools:layout="@layout/fragment_edit_one_habit">
         <argument

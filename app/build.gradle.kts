@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id ("kotlin-parcelize")
 }
 
@@ -42,7 +42,7 @@ dependencies {
     implementation (libs.kotlin.parcelize.runtime)
     implementation (libs.androidx.room.runtime)
     implementation(libs.androidx.gridlayout)
-    kapt(libs.androidx.room.compiler)
+    ksp("androidx.room:room-compiler:2.5.0")
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.core.ktx)

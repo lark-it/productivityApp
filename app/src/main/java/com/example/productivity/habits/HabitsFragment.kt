@@ -6,18 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageButton
-import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.room.Room
-import com.example.productivity.AppDatabase
 import com.example.productivity.OverallFragment
 import com.example.productivity.R
-import com.example.productivity.WeeklyFragment
+import com.example.productivity.habits.weekly.WeeklyFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.launch
 
 class HabitsFragment : Fragment() {
 

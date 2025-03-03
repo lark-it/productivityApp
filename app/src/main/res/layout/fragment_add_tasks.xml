@@ -2,9 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="@color/mirage">
 
     <EditText
         android:id="@+id/et_task_title"
@@ -15,6 +17,75 @@
         android:background="@android:drawable/editbox_background"
         android:textSize="16sp"/>
 
+    <!-- Поле для даты задачи -->
+    <EditText
+        android:id="@+id/et_task_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Дата задачи"
+        android:padding="12dp"
+        android:background="@android:drawable/editbox_background"
+        android:textSize="16sp"
+        android:focusable="false"
+        android:clickable="true"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Поле для времени задачи -->
+    <EditText
+        android:id="@+id/et_task_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Время задачи"
+        android:padding="12dp"
+        android:background="@android:drawable/editbox_background"
+        android:textSize="16sp"
+        android:focusable="false"
+        android:clickable="true"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Выбор важности через радиогруппу -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="Важность:"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:id="@+id/radio_group_importance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:checked="true"/>
+
+            <RadioButton
+                android:id="@+id/radio_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"/>
+
+            <RadioButton
+                android:id="@+id/radio_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3"/>
+        </RadioGroup>
+    </LinearLayout>
+
     <Button
         android:id="@+id/btn_save_task"
         android:layout_width="match_parent"
@@ -23,4 +94,5 @@
         android:backgroundTint="#2D0F5D"
         android:text="Сохранить"
         android:textColor="@android:color/white" />
+
 </LinearLayout>

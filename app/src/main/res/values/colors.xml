@@ -2,4 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="mirage">#1b1a2f</color>
+    <color name="ebony_clay">#252443</color>
 </resources>

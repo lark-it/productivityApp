@@ -1,10 +1,9 @@
-package com.example.productivity.habits
+package com.example.productivity.habits.edit
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
@@ -15,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.example.productivity.AppDatabase
 import com.example.productivity.R
+import com.example.productivity.habits.HabitsDao
+import com.example.productivity.habits.HabitsEntity
 import kotlinx.coroutines.launch
 
 class EditHabitsFragment : DialogFragment() {

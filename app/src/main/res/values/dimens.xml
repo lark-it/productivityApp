@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="calendar_item_spacing">4dp</dimen> <!-- Отступ между элементами, например, 8dp -->
+</resources>

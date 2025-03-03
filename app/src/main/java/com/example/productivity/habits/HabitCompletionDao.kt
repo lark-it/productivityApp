@@ -15,4 +15,11 @@ interface HabitCompletionDao {
 
     @Query("DELETE FROM habit_completion WHERE habitId = :habitId AND date = :date")
     suspend fun deleteCompletion(habitId: Int, date: String)
+
+    @Query("SELECT date FROM habit_completion WHERE habitId = :habitId")
+    suspend fun getCompletedDates(habitId: Int): List<String>
+
 }
+
+
+

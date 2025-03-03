@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp">
+    android:padding="20dp"
+    android:background="@color/mirage"
+    >
 
     <ImageButton
         android:id="@+id/buttonBack"
@@ -24,6 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Название"
+        android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonBack" />
 
@@ -31,8 +34,9 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Создать новую привычку"
         android:layout_marginTop="24dp"
+        android:text="Создать новую привычку"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonBack"
         app:layout_constraintTop_toTopOf="parent" />
@@ -55,6 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Иконка"
+        android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etHabitTitle" />
 
@@ -83,6 +88,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="смотреть все"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/scroll_icons"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -91,6 +97,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Цвет"
+        android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scroll_icons" />
 
@@ -118,6 +125,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="В какие дни:"
+        android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rvColors" />
 
@@ -167,6 +175,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Дата начала: Не выбрано"
+        android:textColor="#FFFFFF"
         app:layout_constraintTop_toBottomOf="@+id/daysOfWeekGrid"
         app:layout_constraintStart_toStartOf="parent"
         android:padding="8dp"/>

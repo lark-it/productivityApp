@@ -1,4 +1,4 @@
-package com.example.productivity.habits
+package com.example.productivity.habits.edit
 
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.productivity.R
+import com.example.productivity.habits.HabitsEntity
 
 class EditHabitsAdapter(
     private var habits: List<HabitsEntity>,

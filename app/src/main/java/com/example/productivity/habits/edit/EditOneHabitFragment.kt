@@ -1,4 +1,4 @@
-package com.example.productivity.habits
+package com.example.productivity.habits.edit
 
 import android.graphics.Color
 import android.os.Bundle
@@ -10,10 +10,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.GridLayout
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ToggleButton
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,6 +19,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.example.productivity.AppDatabase
 import com.example.productivity.R
+import com.example.productivity.habits.BaseHabitFragment
+import com.example.productivity.habits.ColorAdapter
+import com.example.productivity.habits.RepeatType
 import kotlinx.coroutines.launch
 
 class EditOneHabitFragment : BaseHabitFragment() {

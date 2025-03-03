@@ -9,9 +9,11 @@ import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.productivity.R
 import com.example.productivity.habits.HabitsEntity
+
 
 sealed class CalendarItem {
     data class DateHeader(val date: String) : CalendarItem()
@@ -23,7 +25,7 @@ class TaskAdapter(
     private val onTaskChecked: (TaskEntity, Boolean) -> Unit,
     private val onTaskEdit: (TaskEntity) -> Unit,
     private val onTaskDelete: (TaskEntity) -> Unit,
-    private val onHabitChecked: (HabitsEntity, String, Boolean) -> Unit // ✅ Добавлен параметр
+    private val onHabitCheckRequest: (HabitsEntity, String, Boolean) -> Boolean
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val items = mutableListOf<CalendarItem>()
@@ -39,7 +41,7 @@ class TaskAdapter(
             is CalendarItem.DateHeader -> 0
             is CalendarItem.TaskItem -> 1
             is CalendarItem.HabitItem -> 2
-            else -> throw IllegalArgumentException("Unknown item type") // ✅ Исправляем ошибку
+            else -> throw IllegalArgumentException("Unknown item type")
         }
     }
 
@@ -48,7 +50,7 @@ class TaskAdapter(
         return when (viewType) {
             0 -> DateHeaderViewHolder(inflater.inflate(R.layout.item_header, parent, false))
             1 -> TaskViewHolder(inflater.inflate(R.layout.item_task, parent, false), onTaskChecked, onTaskEdit, onTaskDelete)
-            2 -> HabitViewHolder(inflater.inflate(R.layout.item_habit_calendar, parent, false), onHabitChecked)
+            2 -> HabitViewHolder(inflater.inflate(R.layout.item_habit_calendar, parent, false), onHabitCheckRequest)
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -83,11 +85,27 @@ class TaskAdapter(
         private val checkBox: CheckBox = view.findViewById(R.id.checkBox)
         private val editButton: ImageButton = view.findViewById(R.id.edit_button)
         private val deleteButton: ImageButton = view.findViewById(R.id.delete_button)
+        private val tvImportant: TextView = view.findViewById(R.id.tv_important)
 
         fun bind(task: TaskEntity) {
             textView.text = task.title
             checkBox.setOnCheckedChangeListener(null)
             checkBox.isChecked = task.isCompleted
+            tvImportant.text = task.importance.toString()
+
+            if (task.isCompleted) {
+                textView.paintFlags = textView.paintFlags or android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
+                textView.setTextColor(Color.parseColor("#818190"))
+                itemView.setBackgroundColor(Color.parseColor("#201f39"))
+                deleteButton.setColorFilter(Color.parseColor("#818190"))
+                editButton.setColorFilter(Color.parseColor("#818190"))
+            } else {
+                textView.paintFlags = textView.paintFlags and android.graphics.Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                textView.setTextColor(Color.WHITE)
+                itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.ebony_clay))
+                deleteButton.setColorFilter(Color.WHITE)
+                editButton.setColorFilter(Color.WHITE)
+            }
 
             checkBox.setOnCheckedChangeListener { _, isChecked ->
                 onTaskChecked(task, isChecked)
@@ -104,7 +122,10 @@ class TaskAdapter(
     }
 
 
-    class HabitViewHolder(view: View, private val onHabitChecked: (HabitsEntity, String, Boolean) -> Unit) : RecyclerView.ViewHolder(view) {
+    class HabitViewHolder(
+        view: View,
+        private val onHabitCheckRequest: (HabitsEntity, String, Boolean) -> Boolean
+    ) : RecyclerView.ViewHolder(view) {
         private val textView: TextView = view.findViewById(R.id.habitTitle)
         private val icon: ImageView = view.findViewById(R.id.habitIcon)
         private val checkBox: CheckBox = view.findViewById(R.id.checkHabitCalendar)
@@ -116,9 +137,15 @@ class TaskAdapter(
             checkBox.setOnCheckedChangeListener(null)
             checkBox.isChecked = habit.isCompleted
 
-            checkBox.setOnCheckedChangeListener { _, isChecked ->
-                onHabitChecked(habit, date, isChecked)
+            checkBox.setOnClickListener {
+                val desiredState = checkBox.isChecked
+                val allowed = onHabitCheckRequest(habit, date, desiredState)
+                if (!allowed) {
+                    checkBox.isChecked = !desiredState
+                }
             }
         }
     }
+
+
 }

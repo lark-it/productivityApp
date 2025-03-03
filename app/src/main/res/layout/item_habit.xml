@@ -4,7 +4,9 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:id="@+id/linearHabit"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:layout_marginBottom="10dp">
+<!-- ЗДЕСЬ ПРО ФРАГМЕНТ ИЗМЕНЕНИЯ ПРИВЫЧЕК-->
     <ImageView
         android:id="@+id/habitIcon"
         android:layout_width="40dp"
@@ -17,7 +19,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="16sp" />
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
     <ImageButton
         android:id="@+id/edit_habit"
