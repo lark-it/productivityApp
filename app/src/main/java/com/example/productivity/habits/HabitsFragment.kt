@@ -8,8 +8,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.navigation.fragment.findNavController
-import com.example.productivity.OverallFragment
 import com.example.productivity.R
+import com.example.productivity.habits.overall.OverallFragment
+import com.example.productivity.habits.today.TodayFragment
 import com.example.productivity.habits.weekly.WeeklyFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -52,7 +53,7 @@ class HabitsFragment : Fragment() {
     }
 
     private fun openEditHabitsFragment() {
-        findNavController().navigate(R.id.editHabitsFragment) // Переход на экран редактирования
+        findNavController().navigate(R.id.editHabitsFragment)
     }
 
 

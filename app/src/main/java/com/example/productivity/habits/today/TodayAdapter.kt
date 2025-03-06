@@ -1,4 +1,4 @@
-package com.example.productivity.habits
+package com.example.productivity.habits.today
 
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater

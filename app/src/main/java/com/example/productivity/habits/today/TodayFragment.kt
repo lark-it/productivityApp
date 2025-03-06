@@ -1,7 +1,6 @@
-package com.example.productivity.habits
+package com.example.productivity.habits.today
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import com.example.productivity.AppDatabase
 import com.example.productivity.R
+import com.example.productivity.habits.HabitCompletionDao
+import com.example.productivity.habits.HabitCompletionEntity
+import com.example.productivity.habits.HabitsDao
+import com.example.productivity.habits.RepeatType
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale

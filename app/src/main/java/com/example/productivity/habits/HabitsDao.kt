@@ -20,6 +20,12 @@ interface HabitsDao {
             " repeatType = :repeatType, repeatDays = :repeatDays WHERE id = :id")
     suspend fun updateHabit(id: Int, title: String, iconResId: Int, color: Int, repeatType: RepeatType, repeatDays: List<Int>)
 
+    @Query("SELECT COUNT(DISTINCT habitId) FROM habit_completion WHERE isCompleted = 1")
+    suspend fun getTotalHabitsCompleted(): Int
+
+
+    @Query("SELECT COUNT(*) FROM habit_completion WHERE date = :date")
+    suspend fun getCompletedHabitsOnDate(date: String): Int
 
     @Delete
     suspend fun deleteHabit(habit: HabitsEntity)

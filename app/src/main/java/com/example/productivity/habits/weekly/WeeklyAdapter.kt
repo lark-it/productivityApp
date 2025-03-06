@@ -43,8 +43,6 @@ class WeeklyAdapter(private var habits: List<HabitWeeklyItem>) : RecyclerView.Ad
         )
     }
 
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_habit_weekly, parent, false)
         return ViewHolder(view)
@@ -60,7 +58,6 @@ class WeeklyAdapter(private var habits: List<HabitWeeklyItem>) : RecyclerView.Ad
                 if (habit.daysCompletion[index]) R.drawable.circle_checked else R.drawable.circle_unchecked
             )
 
-            // ✅ Устанавливаем правильное название дня недели
             holder.dayLabels[index].text = getDayOfWeek(date)
         }
     }
