@@ -1,12 +1,15 @@
 package com.example.productivity.home
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.db.williamchart.data.AxisType
 import com.example.productivity.AppDatabase
 import com.example.productivity.R
 import com.example.productivity.calendar.TaskEntity
@@ -15,7 +18,9 @@ import com.example.productivity.habits.RepeatType
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
+import com.db.williamchart.view.BarChartView
 
 class HomeFragment : Fragment() {
 
@@ -30,6 +35,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         calculateStats()
+        setupHabitsCompletedChart()
     }
 
     private fun calculateStats() {
@@ -108,7 +114,6 @@ class HomeFragment : Fragment() {
         return streak
     }
 
-
     private fun calculatePerfectDays(tasks: List<TaskEntity>, completedHabits: List<HabitCompletionEntity>): Int {
         val tasksByDate = tasks.groupBy { it.date }
         val habitsByDate = completedHabits.groupBy { it.date }
@@ -126,7 +131,41 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun setupHabitsCompletedChart() {
+        lifecycleScope.launch {
+            val db = AppDatabase.getDatabase(requireContext())
+            val habitCompletionDao = db.habitCompletionDao()
+            val taskDao = db.taskDao()
 
+            val fullDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val dayOnlyFormat = SimpleDateFormat("d", Locale.getDefault())
+            val calendar = Calendar.getInstance()
 
+            val last7Days = (0..6).map {
+                calendar.time = Date(System.currentTimeMillis() - it * 24 * 60 * 60 * 1000)
+                fullDateFormat.format(calendar.time)
+            }.reversed()
 
+            val habitsData = last7Days.map { date ->
+                val habitsCompleted = habitCompletionDao.getCompletedCountByDate(date)
+                val tasksCompleted = taskDao.getCompletedCountByDate(date)
+
+                val dayLabel = fullDateFormat.parse(date)?.let { dayOnlyFormat.format(it) } ?: "?"
+                dayLabel to (habitsCompleted + tasksCompleted).toFloat()
+            }
+
+            requireActivity().runOnUiThread {
+                val barChart = view?.findViewById<BarChartView>(R.id.barChart)
+                if (barChart != null) {
+                    barChart.animate(habitsData)
+
+                    barChart.barsColor = ContextCompat.getColor(requireContext(), R.color.purple_200)
+                    barChart.labelsColor = Color.WHITE
+                    barChart.axis = AxisType.XY
+
+                    barChart.labelsFormatter = { value -> value.toInt().toString() }
+                }
+            }
+        }
+    }
 }

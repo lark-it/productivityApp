@@ -38,10 +38,12 @@ android {
 }
 
 dependencies {
+    implementation("com.diogobernardino:williamchart:3.10.1")
     implementation (libs.androidx.room.ktx)
     implementation (libs.kotlin.parcelize.runtime)
     implementation (libs.androidx.room.runtime)
     implementation(libs.androidx.gridlayout)
+    implementation(libs.protolite.well.known.types)
     ksp("androidx.room:room-compiler:2.5.0")
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)

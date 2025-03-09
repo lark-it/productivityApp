@@ -24,4 +24,8 @@ interface TaskDao {
     @Query("SELECT * FROM tasks WHERE date LIKE :month || '%'")
     suspend fun getTasksByMonth(month: String): List<TaskEntity>
 
+    @Query("SELECT COUNT(*) FROM tasks WHERE date = :date AND isCompleted = 1")
+    suspend fun getCompletedCountByDate(date: String): Int
+
+
 }

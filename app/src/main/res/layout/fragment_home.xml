@@ -104,8 +104,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressContainer" />
 
-    <!-- GridLayout для карточек -->
     <GridLayout
+        android:id="@+id/grid_stat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:columnCount="2"
@@ -236,5 +236,13 @@
         </LinearLayout>
 
     </GridLayout>
+    <com.db.williamchart.view.BarChartView
+        android:id="@+id/barChart"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/grid_stat"
+        android:background="?attr/colorSurface"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

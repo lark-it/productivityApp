@@ -28,6 +28,10 @@ interface HabitCompletionDao {
     @Query("SELECT COUNT(DISTINCT date) FROM habit_completion WHERE isCompleted = 1")
     suspend fun getPerfectDays(): Int
 
+    @Query("SELECT COUNT(*) FROM habit_completion WHERE date = :date AND isCompleted = 1")
+    suspend fun getCompletedCountByDate(date: String): Int
+
+
 }
 
 
