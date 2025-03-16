@@ -1,6 +1,7 @@
 package com.example.productivity.habits.today
 
 import android.graphics.drawable.GradientDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.productivity.R
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 sealed class HabitItem {
     data class Header(val title: String) : HabitItem()
@@ -18,7 +22,7 @@ sealed class HabitItem {
 
 class TodayAdapter(
     private var habits: List<HabitItem>,
-    private val onHabitChecked: (HabitItem.Habit) -> Unit
+    private val onHabitChecked: (Int, Boolean, String) -> Unit
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
 
     companion object {
@@ -51,13 +55,19 @@ class TodayAdapter(
         }
     }
 
-    class HabitViewHolder(view: View, private val onHabitChecked: (HabitItem.Habit) -> Unit) : RecyclerView.ViewHolder(view) {
+    class HabitViewHolder(
+        view: View,
+        private val onHabitChecked: (Int, Boolean, String) -> Unit // ✅ Передаём `habitId`, `isChecked`, `date`
+    ) : RecyclerView.ViewHolder(view) {
+
         private val title: TextView = view.findViewById(R.id.titleName)
         private val checkHabit: CheckBox = view.findViewById(R.id.checkHabit)
         private val habitIcon: ImageView = view.findViewById(R.id.habitIcon)
         private val linearHabit: LinearLayout = view.findViewById(R.id.linearHabit)
 
         fun bind(habit: HabitItem.Habit) {
+            val todayDate = getCurrentDate() // ✅ Получаем текущую дату
+
             title.text = habit.title
             habitIcon.setImageResource(habit.iconResId)
 
@@ -72,12 +82,20 @@ class TodayAdapter(
             checkHabit.isChecked = habit.isCompleted
 
             checkHabit.setOnCheckedChangeListener { _, isChecked ->
-                onHabitChecked(habit.copy(isCompleted = isChecked))
+                Log.d("TodayAdapter", "Чекбокс изменён: habitId=${habit.id}, isChecked=$isChecked")
+                onHabitChecked(habit.id, isChecked, todayDate)
             }
 
+        }
 
+        private fun getCurrentDate(): String {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            return dateFormat.format(Date())
         }
     }
+
+
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = habits[position]) {
             is HabitItem.Header -> (holder as HeaderTodayViewHolder).bind(item)

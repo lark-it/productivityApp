@@ -56,6 +56,4 @@ class HabitsFragment : Fragment() {
         findNavController().navigate(R.id.editHabitsFragment)
     }
 
-
-
 }

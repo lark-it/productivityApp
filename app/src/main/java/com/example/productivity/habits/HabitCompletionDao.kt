@@ -31,8 +31,12 @@ interface HabitCompletionDao {
     @Query("SELECT COUNT(*) FROM habit_completion WHERE date = :date AND isCompleted = 1")
     suspend fun getCompletedCountByDate(date: String): Int
 
+    @Query("SELECT COUNT(*) FROM habit_completion WHERE date BETWEEN :startDate AND :endDate AND isCompleted = 1")
+    suspend fun getCompletedCountBetweenDates(startDate: String, endDate: String): Int
+
+    @Query("SELECT COUNT(*) FROM habit_completion WHERE date BETWEEN :startDate AND :endDate")
+    suspend fun getTotalHabitOccurrencesBetweenDates(startDate: String, endDate: String): Int
+
+
 
 }
-
-
-

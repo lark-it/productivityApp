@@ -40,7 +40,7 @@ class CalendarAdapter(
             }
         }
 
-        if (position < 7) { // Дни недели
+        if (position < 7) {
             holder.dayText.setTextColor(holder.itemView.context.getColor(android.R.color.darker_gray))
             holder.dayText.textSize = 14f
             holder.dayText.setBackgroundResource(0)
