@@ -6,5 +6,6 @@ import androidx.room.Entity
 data class HabitCompletionEntity(
     val habitId: Int,
     val date: String,
-    val isCompleted: Boolean
+    val isCompleted: Boolean,
+    val bonusAwarded: Boolean = false
 )

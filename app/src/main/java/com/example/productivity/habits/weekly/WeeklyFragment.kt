@@ -41,20 +41,6 @@ class WeeklyFragment : Fragment() {
 
         return view
     }
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val db = AppDatabase.getDatabase(requireContext())
-        habitDao = db.habitsDao()
-        habitCompletionDao = db.habitCompletionDao()
-
-        val recyclerView = view.findViewById<RecyclerView>(R.id.rv_weekly)
-        adapter = WeeklyAdapter(emptyList())
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        updateWeeklyView()
-    }
 
     private fun getWeekDatesForHabit(habit: HabitsEntity): List<String> {
         val startDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(habit.startDate) ?: return emptyList()
@@ -62,7 +48,6 @@ class WeeklyFragment : Fragment() {
         calendar.time = startDate
 
         val weekDates = mutableListOf<String>()
-
         repeat(7) {
             while (habit.repeatType == RepeatType.WEEKLY && habit.repeatDays?.contains(calendar.get(Calendar.DAY_OF_WEEK) - 1) == false) {
                 calendar.add(Calendar.DAY_OF_MONTH, 1)
@@ -70,7 +55,6 @@ class WeeklyFragment : Fragment() {
             weekDates.add(SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time))
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
-
         return weekDates
     }
 
@@ -82,16 +66,11 @@ class WeeklyFragment : Fragment() {
             for (habit in habits) {
                 val weekDates = getWeekDatesForHabit(habit)
                 val completedDates = habitCompletionDao.getCompletedDates(habit.id)
-
-                val daysCompletion = weekDates.map { date ->
-                    completedDates.contains(date)
-                }
-
+                val daysCompletion = weekDates.map { date -> completedDates.contains(date) }
                 weeklyHabits.add(HabitWeeklyItem(habit.title, daysCompletion, weekDates))
             }
 
             adapter.updateList(weeklyHabits)
         }
     }
-
 }

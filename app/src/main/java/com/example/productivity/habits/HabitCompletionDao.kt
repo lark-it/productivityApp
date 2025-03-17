@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.productivity.home.HabitBonusEntity
 
 @Dao
 interface HabitCompletionDao {
@@ -19,7 +20,8 @@ interface HabitCompletionDao {
     @Query("SELECT date FROM habit_completion WHERE habitId = :habitId")
     suspend fun getCompletedDates(habitId: Int): List<String>
 
-    @Query("SELECT habitId, date, isCompleted FROM habit_completion")
+    // Исправляем запрос, добавляя bonusAwarded в результат
+    @Query("SELECT habitId, date, isCompleted, bonusAwarded FROM habit_completion")
     suspend fun getAllCompletedDates(): List<HabitCompletionEntity>
 
     @Query("SELECT COUNT(DISTINCT date) FROM habit_completion")
@@ -37,6 +39,18 @@ interface HabitCompletionDao {
     @Query("SELECT COUNT(*) FROM habit_completion WHERE date BETWEEN :startDate AND :endDate")
     suspend fun getTotalHabitOccurrencesBetweenDates(startDate: String, endDate: String): Int
 
+    @Query("SELECT EXISTS(SELECT 1 FROM habit_bonus WHERE habit_id = :habitId AND week_start = :weekStart AND week_end = :weekEnd)")
+    suspend fun hasBonusBeenAwarded(habitId: Int, weekStart: String, weekEnd: String): Boolean
 
+    @Query("UPDATE habit_completion SET bonusAwarded = 1 WHERE habitId = :habitId AND date BETWEEN :weekStart AND :weekEnd AND isCompleted = 1")
+    suspend fun markBonusAwarded(habitId: Int, weekStart: String, weekEnd: String)
 
+    @Query("UPDATE habit_completion SET bonusAwarded = 0 WHERE habitId = :habitId AND date BETWEEN :weekStart AND :weekEnd")
+    suspend fun resetBonus(habitId: Int, weekStart: String, weekEnd: String)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun markBonusAwarded(bonus: HabitBonusEntity)
+
+    @Query("DELETE FROM habit_bonus WHERE habit_id = :habitId AND week_start = :weekStart AND week_end = :weekEnd")
+    suspend fun revokeBonus(habitId: Int, weekStart: String, weekEnd: String)
 }

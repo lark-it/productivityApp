@@ -1,6 +1,7 @@
 package com.example.productivity.calendar
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,6 @@ sealed class CalendarItem {
 }
 
 class TaskAdapter(
-    // коллбэки
     private val onTaskChecked           : (TaskEntity, Boolean) -> Unit,
     private val onTaskEdit             : (TaskEntity) -> Unit,
     private val onTaskDelete           : (TaskEntity) -> Unit,
@@ -143,11 +143,11 @@ class TaskAdapter(
 
             checkBox.setOnClickListener {
                 val desiredState = checkBox.isChecked
+                Log.d("TaskAdapter", "Habit clicked: habitId=${habit.id}, date=$date, desiredState=$desiredState")
                 val allowed = onHabitCheckRequest(habit, date, desiredState)
                 if (!allowed) {
                     checkBox.isChecked = !desiredState
-                }
-                else {
+                } else {
                     onHabitChecked(habit.id, desiredState, date)
                 }
             }

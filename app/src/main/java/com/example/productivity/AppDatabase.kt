@@ -11,11 +11,13 @@ import com.example.productivity.habits.HabitCompletionDao
 import com.example.productivity.habits.HabitCompletionEntity
 import com.example.productivity.habits.HabitsDao
 import com.example.productivity.habits.HabitsEntity
+import com.example.productivity.home.HabitBonusEntity
 import com.example.productivity.home.UserDao
 import com.example.productivity.home.UserEntity
 
 @Database(
-    entities = [TaskEntity::class, HabitsEntity::class, HabitCompletionEntity::class, UserEntity::class],
+    entities = [TaskEntity::class, HabitsEntity::class,
+        HabitCompletionEntity::class, UserEntity::class, HabitBonusEntity::class],
     version = 10)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
