@@ -9,7 +9,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.example.productivity.R
+import com.example.productivity.AppDatabase
+import com.example.productivity.home.UserRepository
+import kotlinx.coroutines.launch
 
 class ShopFragment : Fragment() {
 
@@ -17,12 +21,15 @@ class ShopFragment : Fragment() {
     private lateinit var buyButton: Button
     private lateinit var prevButton: Button
     private lateinit var nextButton: Button
+    private lateinit var backButton: Button
+    private lateinit var userRepository: UserRepository
     private var selectedSkinIndex = 0
 
     private val skins = listOf(
         R.drawable.pet_default,
         R.drawable.pet_blue,
         R.drawable.pet_red
+
     )
 
     private val skinPrices = listOf(0, 10, 20, 30)
@@ -41,6 +48,10 @@ class ShopFragment : Fragment() {
         buyButton = view.findViewById(R.id.buyButton)
         prevButton = view.findViewById(R.id.prevSkinButton)
         nextButton = view.findViewById(R.id.nextSkinButton)
+        backButton = view.findViewById(R.id.backButton)
+
+        val db = AppDatabase.getDatabase(requireContext())
+        userRepository = UserRepository(db.userDao())
 
         updateSkinPreview()
 
@@ -55,29 +66,60 @@ class ShopFragment : Fragment() {
         }
 
         buyButton.setOnClickListener {
-            buySkin()
+            if (isSkinPurchased(skins[selectedSkinIndex])) {
+                selectSkin()
+            } else {
+                buySkin()
+            }
+        }
+
+        backButton.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
 
     private fun updateSkinPreview() {
         skinPreview.setImageResource(skins[selectedSkinIndex])
-        buyButton.text = "Купить за ${skinPrices[selectedSkinIndex]} монет"
+
+        if (isSkinPurchased(skins[selectedSkinIndex])) {
+            buyButton.text = "Выбрать"
+        } else {
+            buyButton.text = "Купить за ${skinPrices[selectedSkinIndex]} монет"
+        }
+    }
+
+    private fun isSkinPurchased(skinResId: Int): Boolean {
+        val sharedPref = requireActivity().getSharedPreferences("tamagotchi_prefs", Context.MODE_PRIVATE)
+        val purchasedSkins = sharedPref.getStringSet("purchased_skins", mutableSetOf()) ?: mutableSetOf()
+        return purchasedSkins.contains(skinResId.toString())
     }
 
     private fun buySkin() {
-        val sharedPref = requireActivity().getSharedPreferences("tamagotchi_prefs", Context.MODE_PRIVATE)
-        val currentCoins = sharedPref.getInt("coins", 100)
+        lifecycleScope.launch {
+            val user = userRepository.getUser()
+            val skinPrice = skinPrices[selectedSkinIndex]
 
-        val skinPrice = skinPrices[selectedSkinIndex]
-        if (currentCoins >= skinPrice) {
-            sharedPref.edit()
-                .putInt("current_skin", skins[selectedSkinIndex])
-                .putInt("coins", currentCoins - skinPrice)
-                .apply()
-
-            Toast.makeText(requireContext(), "Скин куплен!", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(requireContext(), "Недостаточно монет!", Toast.LENGTH_SHORT).show()
+            if (user.coins >= skinPrice) {
+                userRepository.addCoinsAndXP(-skinPrice, 0)
+                savePurchasedSkin(skins[selectedSkinIndex])
+                updateSkinPreview()
+                Toast.makeText(requireContext(), "Скин куплен!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Недостаточно монет!", Toast.LENGTH_SHORT).show()
+            }
         }
+    }
+
+    private fun savePurchasedSkin(skinResId: Int) {
+        val sharedPref = requireActivity().getSharedPreferences("tamagotchi_prefs", Context.MODE_PRIVATE)
+        val purchasedSkins = sharedPref.getStringSet("purchased_skins", mutableSetOf()) ?: mutableSetOf()
+        purchasedSkins.add(skinResId.toString())
+        sharedPref.edit().putStringSet("purchased_skins", purchasedSkins).apply()
+    }
+
+    private fun selectSkin() {
+        val sharedPref = requireActivity().getSharedPreferences("tamagotchi_prefs", Context.MODE_PRIVATE)
+        sharedPref.edit().putInt("current_skin", skins[selectedSkinIndex]).apply()
+        Toast.makeText(requireContext(), "Скин выбран!", Toast.LENGTH_SHORT).show()
     }
 }
