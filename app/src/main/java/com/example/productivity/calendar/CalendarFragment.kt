@@ -193,7 +193,7 @@ class CalendarFragment : Fragment() {
                 userRepository.addCoinsAndXP(coins = -coinChange, xp = -xpChange)
                 checkAndRevokeWeeklyBonus(habitId, date)
             } else {
-                Log.d("CalendarFragment", "ℹСостояние не изменилось для habitId=$habitId за дату $date")
+                Log.d("CalendarFragment", "ℹ️ Состояние не изменилось для habitId=$habitId за дату $date")
             }
             requireActivity().runOnUiThread { loadTasksAndHabits() }
             habitProcessing.remove(habitId)
@@ -275,8 +275,10 @@ class CalendarFragment : Fragment() {
 
             for (habit in habits) {
                 val startDate = dateFormat.parse(habit.startDate) ?: continue
-                tempCal.time = startDate
-                while (tempCal.get(Calendar.YEAR) == year && tempCal.get(Calendar.MONTH) + 1 == month) {
+                val tempCal = Calendar.getInstance().apply { time = startDate }
+                val endCal = Calendar.getInstance().apply { set(year, month - 1, getActualMaximum(Calendar.DAY_OF_MONTH)) }
+
+                while (tempCal.time <= endCal.time) {
                     val dateKey = dateFormat.format(tempCal.time)
                     val dayOfWeek = tempCal.get(Calendar.DAY_OF_WEEK) - 1
                     val isHabitDay = when (habit.repeatType) {
@@ -285,7 +287,7 @@ class CalendarFragment : Fragment() {
                         RepeatType.MONTHLY -> tempCal.get(Calendar.DAY_OF_MONTH) == startDate.date
                     }
 
-                    if (isHabitDay) {
+                    if (isHabitDay && tempCal.get(Calendar.YEAR) == year && tempCal.get(Calendar.MONTH) + 1 == month) {
                         uniqueDates.add(dateKey)
                         val isCompleted = completionDao.isHabitCompleted(habit.id, dateKey) ?: false
                         val habitCopy = habit.copy(isCompleted = isCompleted)

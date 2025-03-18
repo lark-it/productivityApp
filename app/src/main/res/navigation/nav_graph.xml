@@ -24,9 +24,16 @@
 
     <fragment
         android:id="@+id/nav_games"
-        android:name="com.example.productivity.GamesFragment"
+        android:name="com.example.productivity.game.GamesFragment"
         android:label="Game"
-        tools:layout="@layout/fragment_games" />
+        tools:layout="@layout/fragment_games">
+
+        <action
+            android:id="@+id/action_gamesFragment_to_shopFragment"
+            app:destination="@id/shopFragment"/>
+
+    </fragment>
+
 
     <fragment
         android:id="@+id/nav_settings"
@@ -95,6 +102,11 @@
             app:argType="boolean" />
     </fragment>
 
+    <fragment
+        android:id="@+id/shopFragment"
+        android:name="com.example.productivity.game.ShopFragment"
+        android:label="Магазин"
+        tools:layout="@layout/fragment_shop"/>
 
 
 </navigation>
