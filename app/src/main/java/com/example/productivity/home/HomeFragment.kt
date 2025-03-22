@@ -128,7 +128,6 @@ class HomeFragment : Fragment() {
     ): Int {
         val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-        // ✅ Фильтруем пустые строки, чтобы не крашилось
         val validDates = completedDates.filter { it.isNotEmpty() }
 
         val uniqueCompletedDates =
@@ -197,10 +196,12 @@ class HomeFragment : Fragment() {
                 val barChart = view?.findViewById<BarChartView>(R.id.barChart)
                 barChart?.apply {
                     animate(habitsData)
-                    barsColor = ContextCompat.getColor(requireContext(), R.color.purple_200)
+                    barsColor = ContextCompat.getColor(requireContext(), R.color.purple_navy)
                     labelsColor = Color.WHITE
                     axis = AxisType.XY
+                    spacing = 40f
                     labelsFormatter = { value -> value.toInt().toString() }
+
                 }
             }
         }
@@ -218,6 +219,7 @@ class HomeFragment : Fragment() {
                 calendar.time = Date(System.currentTimeMillis() - it * 7 * 24 * 60 * 60 * 1000)
                 fullDateFormat.format(calendar.time)
             }.reversed()
+
             val completionRateData = last6Weeks.map { weekStartDate ->
                 val endOfWeek = calendar.apply {
                     time = fullDateFormat.parse(weekStartDate) ?: Date()
@@ -225,38 +227,47 @@ class HomeFragment : Fragment() {
                 }.time
                 val weekLabel = weekFormat.format(endOfWeek)
                 val completedHabits = habitCompletionDao.getCompletedCountBetweenDates(
-                    weekStartDate,
-                    fullDateFormat.format(endOfWeek)
+                    weekStartDate, fullDateFormat.format(endOfWeek)
                 )
                 val completedTasks = taskDao.getCompletedCountBetweenDates(
-                    weekStartDate,
-                    fullDateFormat.format(endOfWeek)
+                    weekStartDate, fullDateFormat.format(endOfWeek)
                 )
                 val totalHabits = habitCompletionDao.getTotalHabitOccurrencesBetweenDates(
-                    weekStartDate,
-                    fullDateFormat.format(endOfWeek)
+                    weekStartDate, fullDateFormat.format(endOfWeek)
                 )
                 val totalTasks = taskDao.getTotalTaskOccurrencesBetweenDates(
-                    weekStartDate,
-                    fullDateFormat.format(endOfWeek)
+                    weekStartDate, fullDateFormat.format(endOfWeek)
                 )
                 val total = totalHabits + totalTasks
                 val completed = completedHabits + completedTasks
-                val rate =
-                    if (total > 0) ((completed.toFloat() / total) * 100).coerceAtMost(100f) else 0f
+                val rate = if (total > 0) ((completed.toFloat() / total) * 100).coerceAtMost(100f) else 0f
                 weekLabel to rate
             }
+
             requireActivity().runOnUiThread {
                 val lineChart = view?.findViewById<LineChartView>(R.id.lineChart)
                 lineChart?.apply {
                     animate(completionRateData)
-                    lineColor = ContextCompat.getColor(requireContext(), R.color.purple_200)
+
+                    lineColor = ContextCompat.getColor(requireContext(), R.color.purple_navy)
+
                     labelsColor = Color.WHITE
+
                     axis = AxisType.XY
+
                     labelsFormatter = { value -> "${value.toInt()}%" }
+
+                    lineThickness = 8f
+
+                    gradientFillColors = intArrayOf(
+                        ContextCompat.getColor(requireContext(), R.color.purple_navy),
+                        Color.TRANSPARENT
+                    )
+
                 }
             }
         }
     }
+
 
 }

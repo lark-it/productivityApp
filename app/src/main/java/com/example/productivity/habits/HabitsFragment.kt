@@ -1,5 +1,7 @@
 package com.example.productivity.habits
 
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RoundRectShape
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.productivity.R
 import com.example.productivity.habits.overall.OverallFragment
@@ -20,7 +23,6 @@ class HabitsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Инфлейтим (создаём) макет для этого фрагмента
         return inflater.inflate(R.layout.fragment_habits, container, false)
     }
 
@@ -31,22 +33,42 @@ class HabitsFragment : Fragment() {
         val btnWeekly = view.findViewById<Button>(R.id.btnWeekly)
         val btnOverall = view.findViewById<Button>(R.id.btnOverall)
 
-        replaceFragment(TodayFragment())
+        val buttons = listOf(btnToday, btnWeekly, btnOverall)
 
-        btnToday.setOnClickListener { replaceFragment(TodayFragment()) }
-        btnWeekly.setOnClickListener { replaceFragment(WeeklyFragment()) }
-        btnOverall.setOnClickListener { replaceFragment(OverallFragment()) }
+        fun updateButtonSelection(selectedButton: Button) {
+            buttons.forEach { button ->
+                if (button == selectedButton) {
+                    button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.chetwode_blue))
+                } else {
+                    button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_gunmetal))
+                }
+            }
+        }
+        replaceFragment(TodayFragment())
+        updateButtonSelection(btnToday)
+
+        btnToday.setOnClickListener {
+            replaceFragment(TodayFragment())
+            updateButtonSelection(btnToday)
+        }
+        btnWeekly.setOnClickListener {
+            replaceFragment(WeeklyFragment())
+            updateButtonSelection(btnWeekly)
+        }
+        btnOverall.setOnClickListener {
+            replaceFragment(OverallFragment())
+            updateButtonSelection(btnOverall)
+        }
 
         val fabAddHabit = view.findViewById<FloatingActionButton>(R.id.fab_add_habit)
         fabAddHabit.setOnClickListener {
             findNavController().navigate(R.id.AddHabitsFragment)
         }
         val btnEdit = view.findViewById<ImageButton>(R.id.btn_edit)
-        btnEdit.setOnClickListener {openEditHabitsFragment()}
-
+        btnEdit.setOnClickListener { openEditHabitsFragment() }
     }
 
-    private fun replaceFragment(fragment: Fragment){
+    private fun replaceFragment(fragment: Fragment) {
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)
             .commit()
@@ -55,5 +77,4 @@ class HabitsFragment : Fragment() {
     private fun openEditHabitsFragment() {
         findNavController().navigate(R.id.editHabitsFragment)
     }
-
 }

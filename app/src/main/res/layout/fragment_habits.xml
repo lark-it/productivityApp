@@ -3,12 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/mirage"
+    android:background="@color/eerie_black"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".game.GamesFragment">
-
-
+    tools:context=".game.GamesFragment"
+    >
     <TextView
         android:id="@+id/goalsName"
         android:layout_width="wrap_content"
@@ -49,19 +48,25 @@
             android:id="@+id/btnToday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Today"/>
+            android:text="Today"
+            android:textColor="@color/white"
+            android:padding="10dp"/>
 
         <Button
             android:id="@+id/btnWeekly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Weekly"/>
+            android:text="Weekly"
+            android:textColor="@color/white"
+            android:padding="10dp"/>
 
         <Button
             android:id="@+id/btnOverall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Overall"/>
+            android:text="Overall"
+            android:textColor="@color/white"
+            android:padding="10dp"/>
 
     </LinearLayout>
 
@@ -84,7 +89,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="20dp"
-        android:layout_marginEnd="20dp"/>
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/chetwode_blue"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

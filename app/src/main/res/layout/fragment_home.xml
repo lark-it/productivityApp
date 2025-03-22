@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@color/mirage">
+    android:background="@color/eerie_black">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,7 +13,6 @@
         android:orientation="vertical"
         android:paddingBottom="80dp">
 
-        <!-- Profile Container -->
         <LinearLayout
             android:id="@+id/profileContainer"
             android:layout_width="match_parent"
@@ -73,7 +72,6 @@
                 android:textStyle="bold"/>
         </LinearLayout>
 
-        <!-- Progress Container -->
         <LinearLayout
             android:id="@+id/progressContainer"
             android:layout_width="match_parent"
@@ -106,14 +104,12 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- RecyclerView for Today's Progress -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_today_progress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="16dp"/>
 
-        <!-- GridLayout for Stat Cards -->
         <GridLayout
             android:id="@+id/grid_stat"
             android:layout_width="match_parent"
@@ -123,7 +119,6 @@
             android:alignmentMode="alignMargins"
             android:useDefaultMargins="true">
 
-            <!-- Stat Card: Current Streak -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -154,7 +149,6 @@
                     android:layout_marginTop="4dp"/>
             </LinearLayout>
 
-            <!-- Stat Card: Completion Rate -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -185,7 +179,6 @@
                     android:layout_marginTop="4dp"/>
             </LinearLayout>
 
-            <!-- Stat Card: Habits Completed -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -216,7 +209,6 @@
                     android:layout_marginTop="4dp"/>
             </LinearLayout>
 
-            <!-- Stat Card: Total Perfect Days -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -249,21 +241,31 @@
 
         </GridLayout>
 
-        <!-- Bar Chart for Habits Completed (Last 7 Days) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Habits Completed"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"/>
+
         <com.db.williamchart.view.BarChartView
             android:id="@+id/barChart"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:layout_marginTop="16dp"
-            android:background="?attr/colorSurface"/>
+            android:layout_margin="20dp"
+            android:background="@color/dark_gunmetal"
+            app:chart_barsRadius="10dp"/>
 
-        <!-- Line Chart for Completion Rate per Week -->
+
         <com.db.williamchart.view.LineChartView
             android:id="@+id/lineChart"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:layout_marginTop="16dp"
-            android:background="?attr/colorSurface"/>
+            android:layout_margin="20dp"
+            android:background="@color/dark_gunmetal"/>
 
     </LinearLayout>
 
