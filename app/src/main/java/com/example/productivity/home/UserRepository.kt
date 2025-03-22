@@ -17,5 +17,19 @@ class UserRepository(private val userDao: UserDao) {
         Log.d("UserRepository", "Теперь у пользователя: ${user.coins} монет, ${user.xp} XP")
     }
 
+    suspend fun setLives(lives: Int) {
+        userDao.updateLives(lives)
+    }
+
+    suspend fun getLives(): Int {
+        return userDao.getLives()
+    }
+    suspend fun updateLives(newLives: Int) {
+        val user = userDao.getUser() ?: return
+        val updatedUser = user.copy(lives = newLives)
+        userDao.updateUser(updatedUser)
+    }
+
+
 }
 

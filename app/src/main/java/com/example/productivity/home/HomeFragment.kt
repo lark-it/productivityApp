@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.db.williamchart.data.AxisType
@@ -25,12 +27,17 @@ import java.util.Locale
 import com.db.williamchart.view.BarChartView
 import com.db.williamchart.view.LineChartView
 import com.example.productivity.calendar.TaskAdapter
+import com.example.productivity.calendar.TaskDao
+import com.example.productivity.habits.HabitsDao
 import com.example.productivity.habits.today.TodayAdapter
 import java.text.ParseException
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 class HomeFragment : Fragment() {
     private lateinit var userRepository: UserRepository
     private lateinit var db: AppDatabase
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,15 +49,26 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        calculateStats()
-        setupHabitsCompletedChart()
-        setupCompletionRateChart()
 
         db = AppDatabase.getDatabase(requireContext())
         val userDao = db.userDao()
+        val habitsDao = db.habitsDao()
+        val taskDao = db.taskDao()
         userRepository = UserRepository(userDao)
+
+        viewModel = ViewModelProvider(requireActivity(), MainViewModelFactory(userRepository, taskDao, habitsDao, requireContext()))
+            .get(MainViewModel::class.java)
+
+        calculateStats()
+        setupHabitsCompletedChart()
+        setupCompletionRateChart()
         loadUserData()
+
+        lifecycleScope.launch {
+            viewModel.updateLives()
+        }
     }
+
     fun loadUserData() {
         lifecycleScope.launch {
             val user = userRepository.getUser()

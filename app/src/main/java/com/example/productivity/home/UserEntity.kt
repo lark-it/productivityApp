@@ -8,7 +8,8 @@ import androidx.room.PrimaryKey
 data class UserEntity(
     @PrimaryKey val id: Int = 1,
     val coins: Int = 0,
-    val xp: Int = 0
+    val xp: Int = 0,
+    val lives: Int = 3
 )
 
 @Entity(tableName = "habit_bonus")

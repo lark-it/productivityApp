@@ -17,17 +17,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Получаем NavController из FragmentContainerView
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        // Связываем BottomNavigationView с NavController
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigationView.setupWithNavController(navController)
 
         bottomNavigationView.setOnItemReselectedListener { item ->
             if (item.itemId == R.id.nav_home) {
-                supportFragmentManager.popBackStack() // Закрываем верхний фрагмент, если он открыт
+                supportFragmentManager.popBackStack()
             }
         }
 

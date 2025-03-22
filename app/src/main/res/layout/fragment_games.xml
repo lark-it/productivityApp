@@ -4,13 +4,80 @@
     android:layout_height="match_parent"
     android:background="@drawable/tamagotchi_background">
 
-    <!-- Чубзик по центру -->
     <ImageView
         android:id="@+id/petImage"
         android:layout_width="300dp"
         android:layout_height="400dp"
         android:layout_gravity="center"
         android:src="@drawable/pet_default" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_margin="50dp">
+
+        <!-- Иконка сердечка -->
+        <ImageView
+            android:id="@+id/heartIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/heart_full"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Прогресс-бар -->
+        <ProgressBar
+            android:id="@+id/livesProgressBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="16dp"
+            android:max="3"
+            android:progress="3"
+            android:progressDrawable="@drawable/progress_bar_background" />
+
+        <!-- Текст "текущее/максимум" -->
+        <TextView
+            android:id="@+id/livesText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="3/3"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+    <!-- Плашка для воскрешения (видна, когда питомец "мёртв") -->
+    <LinearLayout
+        android:id="@+id/reviveLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@android:color/darker_gray"
+        android:padding="8dp"
+        android:layout_marginTop="16dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/reviveText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ваш питомец умер! Воскресить за 20 монет?"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/reviveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Воскресить"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/shopButton"
         android:layout_width="wrap_content"

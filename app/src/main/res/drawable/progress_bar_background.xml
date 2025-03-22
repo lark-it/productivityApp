@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/progress_bar_background.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Фон (серая часть) -->
+    <item android:id="@android:id/background">
+        <shape>
+            <solid android:color="#4A4A4A" /> <!-- Серый фон -->
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+    <!-- Заполненная часть (красная) -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <solid android:color="#FF5555" /> <!-- Красный цвет -->
+                <corners android:radius="8dp" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>

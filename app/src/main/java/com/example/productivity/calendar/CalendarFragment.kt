@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,6 +23,8 @@ import com.example.productivity.habits.HabitCompletionEntity
 import com.example.productivity.habits.HabitsEntity
 import com.example.productivity.habits.RepeatType
 import com.example.productivity.home.HabitBonusEntity
+import com.example.productivity.home.MainViewModel
+import com.example.productivity.home.MainViewModelFactory
 import com.example.productivity.home.UserRepository
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
@@ -37,6 +40,7 @@ class CalendarFragment : Fragment() {
     private lateinit var habitDao: AppDatabase.() -> com.example.productivity.habits.HabitsDao
     private lateinit var habitCompletionDao: AppDatabase.() -> com.example.productivity.habits.HabitCompletionDao
     private lateinit var userRepository: UserRepository
+    private lateinit var viewModel: MainViewModel
 
     private var selectedDate: String = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
     private val calendar = Calendar.getInstance()
@@ -59,6 +63,12 @@ class CalendarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val taskDao = db.taskDao()
+        viewModel = ViewModelProvider(
+            requireActivity(),
+            MainViewModelFactory(userRepository, taskDao, db.habitsDao(), requireContext())
+        ).get(MainViewModel::class.java)
 
         val rvCalendar = view.findViewById<RecyclerView>(R.id.rv_calendar)
         rvCalendar.layoutManager = GridLayoutManager(requireContext(), 7)
@@ -163,8 +173,21 @@ class CalendarFragment : Fragment() {
             val coinChange = when (task.importance) { 1 -> 1; 2 -> 2; 3 -> 3; else -> 1 }
             val xpChange = 1
 
-            if (wasCompleted && !isCompleted) userRepository.addCoinsAndXP(-coinChange, -xpChange)
-            else if (!wasCompleted && isCompleted) userRepository.addCoinsAndXP(coinChange, xpChange)
+            if (wasCompleted && !isCompleted) {
+                userRepository.addCoinsAndXP(-coinChange, -xpChange)
+                viewModel.decreaseLifeIfRecent(task.date) // Отнимаем жизнь при отмене
+            } else if (!wasCompleted && isCompleted) {
+                userRepository.addCoinsAndXP(coinChange, xpChange)
+                // Добавляем жизнь при выполнении задачи
+                val currentLives = userRepository.getUser().lives
+                val maxLives = 3
+                if (currentLives < maxLives) {
+                    val newLives = currentLives + 1
+                    userRepository.updateLives(newLives)
+                    viewModel.lives.postValue(newLives)
+                    Log.d("CalendarFragment", "💖 Восстановлена жизнь за задачу на ${task.date}, теперь $newLives")
+                }
+            }
 
             taskDao.updateTaskCompletion(task.id, isCompleted)
             requireActivity().runOnUiThread { loadTasksAndHabits() }
@@ -186,15 +209,26 @@ class CalendarFragment : Fragment() {
                 Log.d("CalendarFragment", "Добавляем выполнение habitId=$habitId за дату $date")
                 completionDao.insertCompletion(HabitCompletionEntity(habitId, date, true))
                 userRepository.addCoinsAndXP(coins = coinChange, xp = xpChange)
+                // Добавляем жизнь при выполнении привычки
+                val currentLives = userRepository.getUser().lives
+                val maxLives = 3
+                if (currentLives < maxLives) {
+                    val newLives = currentLives + 1
+                    userRepository.updateLives(newLives)
+                    viewModel.lives.postValue(newLives)
+                    Log.d("CalendarFragment", "💖 Восстановлена жизнь за привычку на $date, теперь $newLives")
+                }
                 checkAndAwardWeeklyBonus(habitId, date)
             } else if (!isCompleted && wasCompleted) {
                 Log.d("CalendarFragment", "Удаляем выполнение habitId=$habitId за дату $date")
                 completionDao.deleteCompletion(habitId, date)
                 userRepository.addCoinsAndXP(coins = -coinChange, xp = -xpChange)
+                viewModel.decreaseLifeIfRecent(date) // Отнимаем жизнь при отмене
                 checkAndRevokeWeeklyBonus(habitId, date)
             } else {
                 Log.d("CalendarFragment", "ℹ️ Состояние не изменилось для habitId=$habitId за дату $date")
             }
+
             requireActivity().runOnUiThread { loadTasksAndHabits() }
             habitProcessing.remove(habitId)
         }
@@ -396,7 +430,6 @@ class CalendarFragment : Fragment() {
 
         Log.d("CalendarFragment", "All days completed: $allDaysCompleted")
 
-        // Используем дату последнего выполнения для уникальности бонуса
         val (weekStart, weekEnd) = if (completedDates.isNotEmpty()) {
             completedDates[0] to dateFormat.format(
                 Calendar.getInstance().apply {

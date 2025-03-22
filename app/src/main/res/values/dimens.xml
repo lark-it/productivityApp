@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="calendar_item_spacing">4dp</dimen> <!-- Отступ между элементами, например, 8dp -->
+    <dimen name="calendar_item_spacing">4dp</dimen>
+    <dimen name="heart_size">48dp</dimen>
 </resources>
