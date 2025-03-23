@@ -1,13 +1,26 @@
 package com.example.productivity.home
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
+import android.view.View
+import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.productivity.R
 import com.example.productivity.calendar.TaskDao
 import com.example.productivity.habits.HabitsDao
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
@@ -18,11 +31,28 @@ class MainViewModel(
     private val context: Context
 ) : ViewModel() {
     val lives = MutableLiveData<Int>()
+    val level = MutableLiveData<Int>()
 
     fun updateLives() {
         viewModelScope.launch {
             checkAndUpdateLives()
             lives.postValue(userRepository.getLives())
+        }
+    }
+
+    fun checkLevelUp(view: View? = null) {
+        viewModelScope.launch {
+            val user = userRepository.getUser()
+            val previousLevel = level.value ?: user.level
+            level.postValue(user.level)
+
+            if (user.level > previousLevel) {
+                withContext(Dispatchers.Main) {
+                    view?.let {
+                        Snackbar.make(it, "Поздравляем! Уровень ${user.level}, звание: ${user.rank}", Snackbar.LENGTH_LONG).show()
+                    } ?: Toast.makeText(context, "Поздравляем! Вы достигли ${user.level} уровня! Новое звание: ${user.rank}", Toast.LENGTH_LONG).show()
+                }
+            }
         }
     }
 
@@ -53,7 +83,6 @@ class MainViewModel(
         val lostLifeDates = mutableListOf<LocalDate>()
         val maxLives = 3
 
-        // Шаг 1: Отнимаем жизни за пропущенные дни между последней проверкой и сегодня
         for (i in 1..ChronoUnit.DAYS.between(lastCheckedDate, today)) {
             val dateToCheck = lastCheckedDate.plusDays(i)
             val dateStr = dateToCheck.toString()
@@ -75,7 +104,6 @@ class MainViewModel(
             }
         }
 
-        // Обновляем данные
         if (lives != user.lives) {
             userRepository.updateLives(lives)
         }

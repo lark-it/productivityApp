@@ -9,7 +9,9 @@ data class UserEntity(
     @PrimaryKey val id: Int = 1,
     val coins: Int = 0,
     val xp: Int = 0,
-    val lives: Int = 3
+    val lives: Int = 3,
+    @ColumnInfo(name = "level") val level: Int = 1,
+    @ColumnInfo(name = "rank") val rank: String = "Новичок"
 )
 
 @Entity(tableName = "habit_bonus")

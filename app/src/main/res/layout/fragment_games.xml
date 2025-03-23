@@ -4,6 +4,75 @@
     android:layout_height="match_parent"
     android:background="@drawable/tamagotchi_background">
 
+    <Button
+        android:id="@+id/addXpButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Добавить 10 XP"
+        android:layout_marginTop="20dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/levelText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Уровень: 1"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/rankText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Новичок"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="70dp">
+
+        <ImageView
+            android:id="@+id/xpIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/xp_icon"
+            android:layout_marginEnd="8dp" />
+
+        <ProgressBar
+            android:id="@+id/xpProgressBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="16dp"
+            android:max="10"
+            android:progress="0"
+            android:progressDrawable="@drawable/progress_bar_background" />
+
+        <TextView
+            android:id="@+id/xpText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="0/10"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+    </LinearLayout>
     <ImageView
         android:id="@+id/petImage"
         android:layout_width="300dp"
@@ -16,9 +85,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_margin="50dp">
+        android:layout_marginTop="90dp">
 
-        <!-- Иконка сердечка -->
         <ImageView
             android:id="@+id/heartIcon"
             android:layout_width="24dp"
@@ -26,7 +94,6 @@
             android:src="@drawable/heart_full"
             android:layout_marginEnd="8dp" />
 
-        <!-- Прогресс-бар -->
         <ProgressBar
             android:id="@+id/livesProgressBar"
             style="@android:style/Widget.ProgressBar.Horizontal"
@@ -37,7 +104,6 @@
             android:progress="3"
             android:progressDrawable="@drawable/progress_bar_background" />
 
-        <!-- Текст "текущее/максимум" -->
         <TextView
             android:id="@+id/livesText"
             android:layout_width="wrap_content"
@@ -48,7 +114,7 @@
             android:textSize="16sp" />
 
     </LinearLayout>
-    <!-- Плашка для воскрешения (видна, когда питомец "мёртв") -->
+
     <LinearLayout
         android:id="@+id/reviveLayout"
         android:layout_width="match_parent"
