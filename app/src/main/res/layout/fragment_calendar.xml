@@ -10,7 +10,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="110dp"
         android:layout_marginTop="2dp"
         android:background="@drawable/rounded_app_bar2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,7 +20,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="110dp"
         android:background="@drawable/rounded_app_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -31,7 +31,7 @@
         android:id="@+id/tv_month"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:layout_marginStart="20dp"
         android:text="April"
         android:textColor="@color/white"
@@ -46,6 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+
         android:text="2033"
         android:textColor="@color/white"
         android:textSize="16sp"
@@ -99,7 +100,7 @@
         android:layout_marginTop="10dp"
         android:text="Задачи:"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -124,11 +125,13 @@
         android:id="@+id/fab_add_task"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
         android:contentDescription="Добавить задачу"
         android:src="@android:drawable/ic_input_add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@color/chetwode_blue"/>
 
 
 

@@ -1,13 +1,10 @@
 package com.example.productivity.habits
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.GradientDrawable
 import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.productivity.R
 
@@ -59,26 +56,24 @@ open class BaseHabitFragment : Fragment() {
         R.drawable.emo_trophy,
         R.drawable.emo_writing
     )
-    fun getColorList(): List<Int> = colors
 
-    protected val colors = listOf(
-        Color.rgb(254,255,204),
-        Color.rgb(249,204,154),
-        Color.rgb(168,148,153),
-        Color.rgb(195,164,164),
-        Color.rgb(247,153,154),
+    protected fun getColorList(): List<Int> = colors.map { ContextCompat.getColor(requireContext(), it) }
 
-        Color.rgb(250,204,204),
-        Color.rgb(248,154,204),
-        Color.rgb(252,204,255),
-        Color.rgb(202,153,255),
-        Color.rgb(206,204,255),
-
-        Color.rgb(161,204,255),
-        Color.rgb(158,197,196),
-        Color.rgb(210,255,255),
-        Color.rgb(208,255,204),
-        Color.rgb(24,26,32) // ТУТ должна быть кнопка а как?
+    private val colors = listOf(
+        R.color.habit_color_1,
+        R.color.habit_color_2,
+        R.color.habit_color_3,
+        R.color.habit_color_4,
+        R.color.habit_color_5,
+        R.color.habit_color_6,
+        R.color.habit_color_7,
+        R.color.habit_color_8,
+        R.color.habit_color_9,
+        R.color.habit_color_10,
+        R.color.habit_color_11,
+        R.color.habit_color_12,
+        R.color.habit_color_13,
+        R.color.habit_color_14,
+        R.color.habit_color_15
     )
-
 }

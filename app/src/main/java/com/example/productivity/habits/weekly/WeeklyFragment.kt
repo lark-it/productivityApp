@@ -67,7 +67,15 @@ class WeeklyFragment : Fragment() {
                 val weekDates = getWeekDatesForHabit(habit)
                 val completedDates = habitCompletionDao.getCompletedDates(habit.id)
                 val daysCompletion = weekDates.map { date -> completedDates.contains(date) }
-                weeklyHabits.add(HabitWeeklyItem(habit.title, daysCompletion, weekDates))
+                weeklyHabits.add(
+                    HabitWeeklyItem(
+                        title = habit.title,
+                        daysCompletion = daysCompletion,
+                        weekDates = weekDates,
+                        iconResId = habit.iconResId, // Передаём иконку
+                        color = habit.color // Передаём цвет
+                    )
+                )
             }
 
             adapter.updateList(weeklyHabits)

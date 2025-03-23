@@ -231,19 +231,24 @@ class HomeFragment : Fragment() {
             val habitCompletionDao = db.habitCompletionDao()
             val taskDao = db.taskDao()
             val fullDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val weekFormat = SimpleDateFormat("dd MMM", Locale.getDefault())
+            val dayFormat = SimpleDateFormat("d", Locale.getDefault())
+
+            // Создаём список дат для последних 6 недель
+            val last6Weeks = mutableListOf<String>()
             val calendar = Calendar.getInstance()
-            val last6Weeks = (0..5).map {
-                calendar.time = Date(System.currentTimeMillis() - it * 7 * 24 * 60 * 60 * 1000)
-                fullDateFormat.format(calendar.time)
-            }.reversed()
+            for (i in 0..5) {
+                calendar.time = Date(System.currentTimeMillis()) // Сбрасываем календарь на текущую дату
+                calendar.add(Calendar.DAY_OF_YEAR, -i * 7) // Отнимаем i недель
+                last6Weeks.add(fullDateFormat.format(calendar.time))
+            }
+            last6Weeks.reverse() // Разворачиваем, чтобы даты шли от старых к новым
 
             val completionRateData = last6Weeks.map { weekStartDate ->
-                val endOfWeek = calendar.apply {
-                    time = fullDateFormat.parse(weekStartDate) ?: Date()
-                    add(Calendar.DAY_OF_YEAR, 6)
-                }.time
-                val weekLabel = weekFormat.format(endOfWeek)
+                val calendarForEndOfWeek = Calendar.getInstance() // Новый календарь для каждой итерации
+                calendarForEndOfWeek.time = fullDateFormat.parse(weekStartDate) ?: Date()
+                calendarForEndOfWeek.add(Calendar.DAY_OF_YEAR, 6)
+                val endOfWeek = calendarForEndOfWeek.time
+                val weekLabel = dayFormat.format(endOfWeek)
                 val completedHabits = habitCompletionDao.getCompletedCountBetweenDates(
                     weekStartDate, fullDateFormat.format(endOfWeek)
                 )
@@ -266,22 +271,16 @@ class HomeFragment : Fragment() {
                 val lineChart = view?.findViewById<LineChartView>(R.id.lineChart)
                 lineChart?.apply {
                     animate(completionRateData)
-
                     lineColor = ContextCompat.getColor(requireContext(), R.color.purple_navy)
-
                     labelsColor = Color.WHITE
-
                     axis = AxisType.XY
-
+                    labelsSize = 42f
                     labelsFormatter = { value -> "${value.toInt()}%" }
-
                     lineThickness = 8f
-
                     gradientFillColors = intArrayOf(
                         ContextCompat.getColor(requireContext(), R.color.purple_navy),
                         Color.TRANSPARENT
                     )
-
                 }
             }
         }

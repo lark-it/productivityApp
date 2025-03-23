@@ -1,5 +1,6 @@
 package com.example.productivity.habits.weekly
 
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,8 @@ class WeeklyAdapter(private var habits: List<HabitWeeklyItem>) : RecyclerView.Ad
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val habitTitle: TextView = view.findViewById(R.id.textView9)
+        val habitIcon: ImageView = view.findViewById(R.id.imageView)
+        val rootLayout: View = view.findViewById(R.id.rootLayout) // Обращаемся к корневому layout
         val dayViews: List<ImageView> = listOf(
             view.findViewById(R.id.monCheck),
             view.findViewById(R.id.tueCheck),
@@ -52,12 +55,23 @@ class WeeklyAdapter(private var habits: List<HabitWeeklyItem>) : RecyclerView.Ad
         val habit = habits[position]
         holder.habitTitle.text = habit.title
 
+        // Устанавливаем иконку
+        holder.habitIcon.setImageResource(habit.iconResId)
+
+        // Устанавливаем цветной фон для корневого layout
+        val background = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = 30f
+            setColor(habit.color)
+        }
+        holder.rootLayout.background = background
+
+        // Отображаем дни недели
         habit.weekDates.forEachIndexed { index, date ->
             holder.dateViews[index].text = date.substring(8)
             holder.dayViews[index].setBackgroundResource(
                 if (habit.daysCompletion[index]) R.drawable.circle_checked else R.drawable.circle_unchecked
             )
-
             holder.dayLabels[index].text = getDayOfWeek(date)
         }
     }
@@ -68,6 +82,7 @@ class WeeklyAdapter(private var habits: List<HabitWeeklyItem>) : RecyclerView.Ad
         habits = newHabits
         notifyDataSetChanged()
     }
+
     private fun getDayOfWeek(dateString: String): String {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val date = dateFormat.parse(dateString) ?: return ""
@@ -79,5 +94,7 @@ class WeeklyAdapter(private var habits: List<HabitWeeklyItem>) : RecyclerView.Ad
 data class HabitWeeklyItem(
     val title: String,
     val daysCompletion: List<Boolean>,
-    val weekDates: List<String>
+    val weekDates: List<String>,
+    val iconResId: Int,
+    val color: Int
 )

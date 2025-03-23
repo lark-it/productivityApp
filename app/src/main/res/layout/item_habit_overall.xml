@@ -2,28 +2,29 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:padding="12dp">
 
-    <!-- Иконка привычки -->
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:scaleType="centerInside"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Название привычки -->
     <TextView
         android:id="@+id/tvHabitTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Название привычки"
-        android:textSize="18sp"
+        android:textSize="22sp"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -37,12 +38,12 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="4dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvHabitTitle">
+        app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
         <TextView
             android:id="@+id/tvDay1"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="24dp"
             android:text="M"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
@@ -52,7 +53,7 @@
         <TextView
             android:id="@+id/tvDay2"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="24dp"
             android:text="T"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
@@ -62,7 +63,7 @@
         <TextView
             android:id="@+id/tvDay3"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="24dp"
             android:text="W"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
@@ -72,7 +73,7 @@
         <TextView
             android:id="@+id/tvDay4"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="24dp"
             android:text="T"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
@@ -82,7 +83,7 @@
         <TextView
             android:id="@+id/tvDay5"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="24dp"
             android:text="F"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
@@ -92,7 +93,7 @@
         <TextView
             android:id="@+id/tvDay6"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="24dp"
             android:text="S"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
@@ -102,14 +103,13 @@
         <TextView
             android:id="@+id/tvDay7"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="24dp"
             android:text="S"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:gravity="center_vertical"
             android:textStyle="bold"/>
     </LinearLayout>
-
 
     <!-- Таблица с выполнением привычки -->
     <GridLayout
@@ -118,10 +118,11 @@
         android:layout_height="wrap_content"
         android:columnCount="15"
         android:rowCount="7"
-        android:padding="4dp"
-        android:useDefaultMargins="true"
-        android:layout_marginStart="12dp"
+        android:alignmentMode="alignBounds"
+        android:padding="2dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintStart_toEndOf="@+id/day_labels_container"
-        app:layout_constraintTop_toBottomOf="@+id/tvHabitTitle"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
         app:layout_constraintEnd_toEndOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

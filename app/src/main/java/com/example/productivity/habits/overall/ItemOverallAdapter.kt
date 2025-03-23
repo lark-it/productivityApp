@@ -1,5 +1,7 @@
 package com.example.productivity.habits.overall
 
+import android.content.res.Resources
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +17,8 @@ class ItemOverallAdapter(private var habits: List<HabitOverallItem>) : RecyclerV
         val habitIcon: ImageView = view.findViewById(R.id.imageView2)
         val habitTitle: TextView = view.findViewById(R.id.tvHabitTitle)
         val gridLayout: GridLayout = view.findViewById(R.id.grid_days)
+        val rootLayout: View = view.findViewById(R.id.rootLayout)
 
-        // Добавляем ссылки на `TextView` для дней недели
         val dayLabels: List<TextView> = listOf(
             view.findViewById(R.id.tvDay1),
             view.findViewById(R.id.tvDay2),
@@ -38,35 +40,49 @@ class ItemOverallAdapter(private var habits: List<HabitOverallItem>) : RecyclerV
         holder.habitTitle.text = habit.title
         holder.gridLayout.removeAllViews()
 
+        holder.habitIcon.setImageResource(habit.iconResId)
+
+        val background = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = 30f
+            setColor(habit.color)
+        }
+        holder.rootLayout.background = background
+
         val transposedDays = transposeDays(habit.daysProgress)
 
-        // Обновляем отображение дней недели
         val daysOfWeek = listOf("M", "T", "W", "T", "F", "S", "S")
         holder.dayLabels.forEachIndexed { index, textView ->
             textView.text = daysOfWeek[index]
         }
 
+        val sizeInDp = 20
+        val marginInDp = 2
+        val sizeInPx = (sizeInDp * Resources.getSystem().displayMetrics.density).toInt()
+        val marginInPx = (marginInDp * Resources.getSystem().displayMetrics.density).toInt()
+
         for (row in 0 until 7) {
             for (col in 0 until 15) {
                 val view = ImageView(holder.itemView.context)
                 val layoutParams = GridLayout.LayoutParams().apply {
-                    rowSpec = GridLayout.spec(row, 1f)
-                    columnSpec = GridLayout.spec(col, 1f)
-                    width = 60
-                    height = 60
-                    setMargins(6, 6, 6, 6)
+                    rowSpec = GridLayout.spec(row)
+                    columnSpec = GridLayout.spec(col)
+                    width = sizeInPx
+                    height = sizeInPx
+                    setMargins(marginInPx, marginInPx, marginInPx, marginInPx)
                 }
                 view.layoutParams = layoutParams
-                view.setBackgroundResource(if (transposedDays[row][col]) R.drawable.circle_checked else R.drawable.circle_unchecked)
+                view.setBackgroundResource(
+                    if (transposedDays[row][col]) R.drawable.circle_checked else R.drawable.circle_unchecked
+                )
                 holder.gridLayout.addView(view)
             }
         }
     }
 
-
     private fun transposeDays(days: List<List<Boolean>>): List<List<Boolean>> {
-        val numWeeks = days.size // 15
-        val numDays = days[0].size // 7
+        val numWeeks = days.size
+        val numDays = days[0].size
 
         val transposed = MutableList(numDays) { MutableList(numWeeks) { false } }
 
@@ -90,5 +106,7 @@ class ItemOverallAdapter(private var habits: List<HabitOverallItem>) : RecyclerV
 
 data class HabitOverallItem(
     val title: String,
-    val daysProgress: List<List<Boolean>>
+    val daysProgress: List<List<Boolean>>,
+    val iconResId: Int,
+    val color: Int
 )

@@ -3,7 +3,7 @@
     android:id="@+id/tv_header_date"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#2c2b42"
+    android:background="@color/dark_gunmetal"
     android:textColor="@color/white"
     android:padding="8dp"
     android:text="25.01.25"

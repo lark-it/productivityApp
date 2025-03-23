@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#20222a"
@@ -11,21 +11,22 @@
         android:id="@+id/imageView"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:scaleType="centerInside"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-         />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="Meditation"
         android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:layout_marginStart="8dp"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/imageView"
         app:layout_constraintStart_toEndOf="@id/imageView"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/imageView"/>
+        app:layout_constraintTop_toTopOf="@id/imageView" />
 
     <LinearLayout
         android:id="@+id/daysContainer"
@@ -41,169 +42,199 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
             android:gravity="center"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tvMonDay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Mon"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"/>
+                android:textSize="16sp"
+                android:textStyle="bold" />
             <ImageView
                 android:id="@+id/monCheck"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/circle_unchecked"/>
+
             <TextView
                 android:id="@+id/tvMonDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:text="22"
-                android:textColor="#A0A0A0"
-                android:textSize="12sp"
-                android:layout_marginTop="2dp"/>
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
         </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
             android:gravity="center"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tvTueDay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tue"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"/>
-            <ImageView android:id="@+id/tueCheck"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/tueCheck"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/circle_unchecked"/>
+
             <TextView
                 android:id="@+id/tvTueDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:text="22"
-                android:textColor="#A0A0A0"
-                android:textSize="12sp"
-                android:layout_marginTop="2dp"/>
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
             android:gravity="center"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tvWedDay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Wed"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"/>
+                android:textSize="16sp"
+                android:textStyle="bold" />
             <ImageView
                 android:id="@+id/wedCheck"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/circle_unchecked"/>
+
             <TextView
                 android:id="@+id/tvWedDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:text="22"
-                android:textColor="#A0A0A0"
-                android:textSize="12sp"
-                android:layout_marginTop="2dp"/>
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
             android:gravity="center"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tvThuDay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Thu"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"/>
+                android:textSize="16sp"
+                android:textStyle="bold" />
             <ImageView
                 android:id="@+id/thuCheck"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/circle_unchecked"/>
+
             <TextView
                 android:id="@+id/tvThuDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:text="22"
-                android:textColor="#A0A0A0"
-                android:textSize="12sp"
-                android:layout_marginTop="2dp"/>
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
             android:gravity="center"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tvFriDay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fri"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"/>
+                android:textSize="16sp"
+                android:textStyle="bold" />
             <ImageView
                 android:id="@+id/friCheck"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/circle_unchecked"/>
+
             <TextView
                 android:id="@+id/tvFriDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:text="22"
-                android:textColor="#A0A0A0"
-                android:textSize="12sp"
-                android:layout_marginTop="2dp"/>
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
             android:gravity="center"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tvSatDay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sat"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"/>
+                android:textSize="16sp"
+                android:textStyle="bold" />
             <ImageView
                 android:id="@+id/satCheck"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/circle_unchecked"/>
+
             <TextView
                 android:id="@+id/tvSatDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:text="22"
-                android:textColor="#A0A0A0"
-                android:textSize="12sp"
-                android:layout_marginTop="2dp"/>
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -211,27 +242,31 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tvSunDay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sun"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"/>
+                android:textSize="16sp"
+                android:textStyle="bold" />
             <ImageView
                 android:id="@+id/sunCheck"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/circle_unchecked"/>
+
             <TextView
                 android:id="@+id/tvSunDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:text="22"
-                android:textColor="#A0A0A0"
-                android:textSize="12sp"
-                android:layout_marginTop="2dp"/>
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
     </LinearLayout>

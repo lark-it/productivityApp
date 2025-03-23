@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.productivity.R
 import com.example.productivity.AppDatabase
 import com.example.productivity.habits.HabitCompletionEntity
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -50,7 +49,12 @@ class OverallFragment : Fragment() {
             val habitItems = habits.map { habit ->
                 val startDate = habit.startDate
                 val daysProgress = generateHabitHistory(startDate, completed, habit.id)
-                HabitOverallItem(habit.title, daysProgress)
+                HabitOverallItem(
+                    title = habit.title,
+                    daysProgress = daysProgress,
+                    iconResId = habit.iconResId,
+                    color = habit.color
+                )
             }
 
             adapter.updateList(habitItems)
@@ -75,8 +79,4 @@ class OverallFragment : Fragment() {
         }
         return history
     }
-
-
-
-
 }
