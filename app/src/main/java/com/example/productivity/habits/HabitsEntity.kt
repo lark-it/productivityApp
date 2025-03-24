@@ -20,6 +20,6 @@ data class HabitsEntity (
 
 @Parcelize
 enum class RepeatType : Parcelable {
-    DAILY, WEEKLY, MONTHLY
+    DAILY, WEEKLY
 }
 

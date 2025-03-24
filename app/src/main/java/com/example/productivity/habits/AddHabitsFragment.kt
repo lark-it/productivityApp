@@ -1,7 +1,6 @@
 package com.example.productivity.habits
 
 import android.app.DatePickerDialog
-import android.graphics.Color
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.util.Log
@@ -13,17 +12,12 @@ import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.GridLayout
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
-import android.widget.ToggleButton
-import androidx.appcompat.app.ActionBar.LayoutParams
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,6 +30,7 @@ class AddHabitsFragment : BaseHabitFragment() {
     private var selectedRepeatType: RepeatType = RepeatType.DAILY
     private lateinit var daysOfWeekGrid: GridLayout
     private var startDate: String? = null
+    private val selectedDays = mutableListOf<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,43 +60,27 @@ class AddHabitsFragment : BaseHabitFragment() {
             findNavController().navigateUp()
         }
 
-        //работаем с выбором типа повторения, выделил комменатрием, чтобы не захламлять
-        val buttonDaily = view.findViewById<ToggleButton>(R.id.buttonDaily)
-        val buttonWeekly = view.findViewById<ToggleButton>(R.id.buttonWeekly)
-        val buttonMonthly = view.findViewById<ToggleButton>(R.id.buttonMonthly)
-
+        // Работаем с выбором типа повторения
+        val repeatTypeGroup = view.findViewById<RadioGroup>(R.id.repeatTypeGroup)
         daysOfWeekGrid = view.findViewById(R.id.daysOfWeekGrid)
 
-        buttonDaily.isChecked = true
+        repeatTypeGroup.check(R.id.buttonDaily)
         showWeeklyDays(false)
         createWeekButtons()
 
-        buttonDaily.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                selectedRepeatType = RepeatType.DAILY
-                buttonWeekly.isChecked = false
-                buttonMonthly.isChecked = false
-                showWeeklyDays(false)
-            }
-        }
-        buttonWeekly.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                selectedRepeatType = RepeatType.WEEKLY
-                buttonDaily.isChecked = false
-                buttonMonthly.isChecked = false
-                showWeeklyDays(true)
-            }
-        }
-        buttonMonthly.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                selectedRepeatType = RepeatType.MONTHLY
-                buttonDaily.isChecked = false
-                buttonWeekly.isChecked = false
-                showWeeklyDays(false)
+        repeatTypeGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.buttonDaily -> {
+                    selectedRepeatType = RepeatType.DAILY
+                    showWeeklyDays(false)
+                }
+                R.id.buttonWeekly -> {
+                    selectedRepeatType = RepeatType.WEEKLY
+                    showWeeklyDays(true)
+                }
             }
         }
 
-        //DatePicker
         val btnPickStartDate = view.findViewById<Button>(R.id.btnPickStartDate)
         val tvStartDate = view.findViewById<TextView>(R.id.tvStartDate)
 
@@ -141,7 +120,7 @@ class AddHabitsFragment : BaseHabitFragment() {
             Toast.makeText(requireContext(), "Выберите иконку и цвет!", Toast.LENGTH_SHORT).show()
         }
     }
-    private val selectedDays = mutableListOf<Int>()
+
     private fun createWeekButtons() {
         val daysGrid = view?.findViewById<GridLayout>(R.id.daysOfWeekGrid) ?: return
         val daysNames = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС")
@@ -149,6 +128,16 @@ class AddHabitsFragment : BaseHabitFragment() {
         for ((index, day) in daysNames.withIndex()) {
             val button = Button(requireContext()).apply {
                 text = day
+                textSize = 14f
+                setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+                setBackgroundResource(R.drawable.day_of_week_button_selector)
+                setPadding(16, 8, 16, 8)
+                layoutParams = GridLayout.LayoutParams().apply {
+                    width = 0
+                    height = GridLayout.LayoutParams.WRAP_CONTENT
+                    columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                    setMargins(6, 6, 6, 6)
+                }
                 setOnClickListener {
                     toggleDaySelection(index + 1, this)
                 }
@@ -156,24 +145,24 @@ class AddHabitsFragment : BaseHabitFragment() {
             daysGrid.addView(button)
         }
     }
+
     private fun toggleDaySelection(day: Int, button: Button) {
         if (selectedDays.contains(day)) {
             selectedDays.remove(day)
-            button.setBackgroundColor(Color.LTGRAY)
+            button.isSelected = false
         } else {
             selectedDays.add(day)
-            button.setBackgroundColor(Color.GREEN)
+            button.isSelected = true
         }
         Log.d("RepeatDays", "Выбранные дни недели: $selectedDays")
     }
 
-    private fun showWeeklyDays(show: Boolean){
+    private fun showWeeklyDays(show: Boolean) {
         daysOfWeekGrid.visibility = if (show) View.VISIBLE else View.GONE
     }
+
     private fun getCurrentDate(): String {
         val calendar = Calendar.getInstance()
         return "${calendar.get(Calendar.YEAR)}-${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.DAY_OF_MONTH)}"
     }
-
 }
-

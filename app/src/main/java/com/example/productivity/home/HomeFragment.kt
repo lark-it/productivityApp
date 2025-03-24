@@ -44,7 +44,6 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,6 +62,7 @@ class HomeFragment : Fragment() {
         setupHabitsCompletedChart()
         setupCompletionRateChart()
         loadUserData()
+        loadTodayProgress()
 
         lifecycleScope.launch {
             viewModel.updateLives()
@@ -77,12 +77,62 @@ class HomeFragment : Fragment() {
             requireActivity().runOnUiThread {
                 view?.findViewById<TextView>(R.id.tv_coins)?.text = "💰 ${user.coins}"
                 view?.findViewById<TextView>(R.id.tv_xp)?.text = "🌟 ${user.xp} XP"
+                view?.findViewById<TextView>(R.id.userLevel)?.text = "Уровень: ${user.level} ${user.rank}"
             }
         }
     }
+
+    private fun loadTodayProgress() {
+        lifecycleScope.launch {
+            val todayDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            val habitsDao = db.habitsDao()
+            val habitCompletionDao = db.habitCompletionDao()
+            val taskDao = db.taskDao()
+
+            // Получаем все привычки
+            val allHabits = habitsDao.getAllHabits()
+            // Фильтруем привычки, которые должны быть выполнены сегодня
+            val todayHabits = allHabits.filter { habit ->
+                val calendar = Calendar.getInstance()
+                val startDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(habit.startDate)
+                if (startDate != null && startDate.time <= System.currentTimeMillis()) {
+                    when (habit.repeatType) {
+                        RepeatType.DAILY -> true
+                        RepeatType.WEEKLY -> {
+                            val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1 // 0=Вс, 1=Пн, ..., 6=Сб
+                            habit.repeatDays?.contains(dayOfWeek) == true
+                        }
+                        else -> false
+                    }
+                } else {
+                    false
+                }
+            }
+
+            // Объявляем переменные на уровне метода
+            val totalHabitsToday = todayHabits.size
+            // Получаем выполненные привычки за сегодня
+            val completedHabits = habitCompletionDao.getCompletedHabitsOnDate(todayDate)
+            val completedHabitsToday = completedHabits.count { completion: HabitCompletionEntity ->
+                todayHabits.any { it.id == completion.habitId }
+            }
+
+            // Получаем задачи за сегодня
+            val todayTasks = taskDao.getTasksByDate(todayDate)
+            val totalTasksToday = todayTasks.size
+            val completedTasksToday = todayTasks.count { it.isCompleted }
+
+            requireActivity().runOnUiThread {
+                view?.findViewById<TextView>(R.id.tv_today_habits)?.text = "Привычки: $completedHabitsToday/$totalHabitsToday"
+                view?.findViewById<TextView>(R.id.tv_today_tasks)?.text = "Задачи: $completedTasksToday/$totalTasksToday"
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         loadUserData()
+        loadTodayProgress()
     }
 
     private fun calculateStats() {
@@ -117,8 +167,6 @@ class HomeFragment : Fragment() {
                         RepeatType.DAILY -> daysSinceStart + 1
                         RepeatType.WEEKLY -> ((daysSinceStart + 1) / 7) * (habit.repeatDays?.size
                             ?: 1)
-
-                        RepeatType.MONTHLY -> (daysSinceStart + 1) / 30
                         else -> 1
                     }
                 } else 0
@@ -200,30 +248,36 @@ class HomeFragment : Fragment() {
             val fullDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val dayOnlyFormat = SimpleDateFormat("d", Locale.getDefault())
             val calendar = Calendar.getInstance()
+
             val last7Days = (0..6).map {
                 calendar.time = Date(System.currentTimeMillis() - it * 24 * 60 * 60 * 1000)
                 fullDateFormat.format(calendar.time)
             }.reversed()
+
             val habitsData = last7Days.map { date ->
                 val habitsCompleted = habitCompletionDao.getCompletedCountByDate(date)
                 val tasksCompleted = taskDao.getCompletedCountByDate(date)
                 val dayLabel = fullDateFormat.parse(date)?.let { dayOnlyFormat.format(it) } ?: "?"
                 dayLabel to (habitsCompleted + tasksCompleted).toFloat()
             }
+
             requireActivity().runOnUiThread {
                 val barChart = view?.findViewById<BarChartView>(R.id.barChart)
                 barChart?.apply {
                     animate(habitsData)
                     barsColor = ContextCompat.getColor(requireContext(), R.color.purple_navy)
                     labelsColor = Color.WHITE
+                    labelsSize = 52f // <-- добавили, чтобы совпадал шрифт
                     axis = AxisType.XY
                     spacing = 40f
                     labelsFormatter = { value -> value.toInt().toString() }
-
                 }
             }
         }
     }
+
+
+
 
     private fun setupCompletionRateChart() {
         lifecycleScope.launch {
@@ -274,7 +328,7 @@ class HomeFragment : Fragment() {
                     lineColor = ContextCompat.getColor(requireContext(), R.color.purple_navy)
                     labelsColor = Color.WHITE
                     axis = AxisType.XY
-                    labelsSize = 42f
+                    labelsSize = 52f
                     labelsFormatter = { value -> "${value.toInt()}%" }
                     lineThickness = 8f
                     gradientFillColors = intArrayOf(
@@ -285,6 +339,4 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
-
 }

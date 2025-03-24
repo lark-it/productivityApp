@@ -1,5 +1,6 @@
 package com.example.productivity.calendar
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
@@ -82,11 +83,12 @@ class TaskAdapter(
         private val onTaskCompletionUpdated: (TaskEntity, Boolean) -> Unit
     ) : RecyclerView.ViewHolder(view) {
 
-        private val textView   : TextView  = view.findViewById(R.id.tv_task_title)
-        private val checkBox   : CheckBox  = view.findViewById(R.id.checkBox)
-        private val editButton : ImageButton = view.findViewById(R.id.edit_button)
+        private val textView    : TextView    = view.findViewById(R.id.tv_task_title)
+        private val checkBox    : CheckBox    = view.findViewById(R.id.checkBox)
+        private val editButton  : ImageButton = view.findViewById(R.id.edit_button)
         private val deleteButton: ImageButton = view.findViewById(R.id.delete_button)
-        private val tvImportant: TextView  = view.findViewById(R.id.tv_important)
+        private val tvImportant : TextView    = view.findViewById(R.id.tv_important)
+        private val ivMoneyIcon : ImageView   = view.findViewById(R.id.iv_money_icon)
 
         fun bind(task: TaskEntity) {
             textView.setOnClickListener(null)
@@ -94,20 +96,22 @@ class TaskAdapter(
 
             textView.text = task.title
             checkBox.isChecked = task.isCompleted
-            tvImportant.text   = task.importance.toString()
+            tvImportant.text = task.importance.toString()
 
             if (task.isCompleted) {
-                textView.paintFlags = textView.paintFlags or  android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
+                textView.paintFlags = textView.paintFlags or android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
                 textView.setTextColor(Color.parseColor("#818190"))
-                itemView.setBackgroundColor(Color.parseColor("#201f39"))
                 deleteButton.setColorFilter(Color.parseColor("#818190"))
-                editButton.setColorFilter  (Color.parseColor("#818190"))
+                editButton.setColorFilter(Color.parseColor("#818190"))
+                tvImportant.setTextColor(Color.parseColor("#818190"))
+                ivMoneyIcon.setColorFilter(Color.parseColor("#818190"))
             } else {
                 textView.paintFlags = textView.paintFlags and android.graphics.Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 textView.setTextColor(Color.WHITE)
-                itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.ebony_clay))
                 deleteButton.setColorFilter(Color.WHITE)
-                editButton.setColorFilter  (Color.WHITE)
+                editButton.setColorFilter(Color.WHITE)
+                tvImportant.setTextColor(Color.WHITE)
+                ivMoneyIcon.setColorFilter(Color.WHITE)
             }
 
             checkBox.setOnCheckedChangeListener { _, isChecked ->
@@ -131,7 +135,7 @@ class TaskAdapter(
     ) : RecyclerView.ViewHolder(view) {
 
         private val textView: TextView  = view.findViewById(R.id.habitTitle)
-        private val icon   : ImageView  = view.findViewById(R.id.habitIcon)
+        private val icon    : ImageView = view.findViewById(R.id.habitIcon)
         private val checkBox: CheckBox  = view.findViewById(R.id.checkHabitCalendar)
 
         fun bind(habit: HabitsEntity, date: String) {

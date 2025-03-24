@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:gravity="center"
-    android:background="@color/mirage">
+    android:background="@color/eerie_black">
 
     <EditText
         android:id="@+id/et_task_title"
@@ -17,7 +17,6 @@
         android:background="@android:drawable/editbox_background"
         android:textSize="16sp"/>
 
-    <!-- Поле для даты задачи -->
     <EditText
         android:id="@+id/et_task_date"
         android:layout_width="match_parent"
@@ -30,7 +29,6 @@
         android:clickable="true"
         android:layout_marginTop="8dp"/>
 
-    <!-- Поле для времени задачи -->
     <EditText
         android:id="@+id/et_task_time"
         android:layout_width="match_parent"
@@ -43,7 +41,6 @@
         android:clickable="true"
         android:layout_marginTop="8dp"/>
 
-    <!-- Выбор важности через радиогруппу -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

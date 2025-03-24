@@ -132,7 +132,6 @@ class TodayFragment : Fragment() {
                 val isHabitDay = when (habit.repeatType) {
                     RepeatType.DAILY -> true
                     RepeatType.WEEKLY -> habit.repeatDays?.contains(dayOfWeek) == true
-                    RepeatType.MONTHLY -> dayOfMonth in (habit.repeatDays ?: emptyList())
                 }
 
                 isHabitDay

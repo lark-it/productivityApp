@@ -318,7 +318,6 @@ class CalendarFragment : Fragment() {
                     val isHabitDay = when (habit.repeatType) {
                         RepeatType.DAILY -> true
                         RepeatType.WEEKLY -> habit.repeatDays?.contains(dayOfWeek) == true
-                        RepeatType.MONTHLY -> tempCal.get(Calendar.DAY_OF_MONTH) == startDate.date
                     }
 
                     if (isHabitDay && tempCal.get(Calendar.YEAR) == year && tempCal.get(Calendar.MONTH) + 1 == month) {
@@ -423,9 +422,6 @@ class CalendarFragment : Fragment() {
                     }
                 }
             }
-            RepeatType.MONTHLY -> {
-                allDaysCompleted = false
-            }
         }
 
         Log.d("CalendarFragment", "All days completed: $allDaysCompleted")
@@ -491,9 +487,6 @@ class CalendarFragment : Fragment() {
                         allDaysCompleted = requiredDays.all { it in completedDates }
                     }
                 }
-            }
-            RepeatType.MONTHLY -> {
-                allDaysCompleted = false
             }
         }
 

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:background="@drawable/rounded_bg"
+    android:background="@drawable/task_background_selector"
     android:orientation="horizontal"
     android:padding="8dp">
 
@@ -21,18 +21,25 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <!-- Важность -->
     <TextView
         android:id="@+id/tv_important"
-        android:layout_width="40dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:text="3"
         android:textSize="14sp"
         android:textColor="@color/white"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:paddingStart="4dp" />
 
-    <!-- Время -->
+    <ImageView
+        android:id="@+id/iv_money_icon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="2dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/ic_money" />
+
     <TextView
         android:id="@+id/tv_task_time"
         android:layout_width="50dp"
@@ -41,8 +48,6 @@
         android:text="14:00"
         android:textColor="@color/white"
         android:textSize="14sp" />
-
-    <!-- Заголовок задачи -->
 
     <ImageButton
         android:id="@+id/delete_button"
@@ -70,8 +75,6 @@
         android:id="@+id/checkBox"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_gravity="center_vertical"
-        />
-
+        android:layout_gravity="center_vertical" />
 
 </LinearLayout>

@@ -29,8 +29,9 @@
                 android:src="@drawable/ic_avatar" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_marginStart="12dp"
                 android:orientation="vertical">
 
@@ -40,16 +41,17 @@
                     android:layout_height="wrap_content"
                     android:text="Hey, Aboltus"
                     android:textColor="#FFFFFF"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/userLevel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Level 12 Master"
+                    android:text="Уровень: 1 Новичок"
                     android:textColor="#A1A1A1"
-                    android:textSize="14sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <TextView
@@ -82,8 +84,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Today's Progress"
-                android:textSize="16sp"
+                android:text="Прогресс сегодня"
+                android:textSize="18sp"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"/>
 
@@ -94,12 +96,23 @@
                 android:gravity="center_vertical">
 
                 <TextView
-                    android:id="@+id/tv_today_complete"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_today_habits"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="6/10 tasks"
-                    android:textSize="14sp"
-                    android:textColor="#A1A1A1"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="Привычки: 0/0"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_today_tasks"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Задачи: 0/0"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
                     android:layout_marginStart="8dp"/>
             </LinearLayout>
         </LinearLayout>
@@ -244,28 +257,39 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Habits Completed"
-            android:textSize="18sp"
+            android:text="Статистика выполнения"
+            android:textSize="20dp"
             android:textColor="@android:color/white"
             android:textStyle="bold"
             android:layout_marginStart="16dp"
-            android:layout_marginBottom="8dp"/>
+            />
 
         <com.db.williamchart.view.BarChartView
             android:id="@+id/barChart"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:layout_margin="20dp"
-            android:background="@color/dark_gunmetal"
-            app:chart_barsRadius="10dp"/>
+            android:layout_margin="8dp"
+            android:background="@drawable/rounded_background"
+            android:padding="16dp"
+            app:chart_barsRadius="10dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Прогресс выполнения %"
+            android:textSize="20dp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginStart="16dp"
+            />
 
         <com.db.williamchart.view.LineChartView
             android:id="@+id/lineChart"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:layout_margin="20dp"
-            android:background="@color/dark_gunmetal"/>
+            android:layout_margin="8dp"
+            android:background="@drawable/rounded_background"
+            android:padding="16dp" />
 
     </LinearLayout>
 

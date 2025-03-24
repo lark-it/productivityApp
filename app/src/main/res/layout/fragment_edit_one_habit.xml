@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
-    android:background="@color/mirage">
+    android:background="@color/eerie_black">
 
     <ImageButton
         android:id="@+id/buttonBack"
@@ -25,6 +25,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Название"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonBack" />
 
@@ -32,8 +35,11 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Редактирование привычки"
         android:layout_marginTop="24dp"
+        android:text="Редактирование привычки"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonBack"
         app:layout_constraintTop_toTopOf="parent" />
@@ -56,9 +62,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Иконка"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etHabitTitle" />
-
 
     <HorizontalScrollView
         android:id="@+id/scroll_icons"
@@ -76,22 +84,16 @@
             android:orientation="horizontal"
             android:padding="8dp">
         </LinearLayout>
-
     </HorizontalScrollView>
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="смотреть все"
-        app:layout_constraintBottom_toTopOf="@+id/scroll_icons"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Цвет"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scroll_icons" />
 
@@ -111,62 +113,56 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="В какие дни:"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rvColors" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7">
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btSaveHabit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="Сохранить"
-
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-    <LinearLayout
+    <RadioGroup
         android:id="@+id/repeatTypeGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7">
 
-        <ToggleButton
+        <RadioButton
             android:id="@+id/buttonDaily"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textOff="Daily"
-            android:textOn="Daily" />
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/repeat_type_button_selector"
+            android:button="@null"
+            android:checked="true"
+            android:padding="8dp"
+            android:text="Daily"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-        <ToggleButton
+        <RadioButton
             android:id="@+id/buttonWeekly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textOff="Weekly"
-            android:textOn="Weekly" />
-
-        <ToggleButton
-            android:id="@+id/buttonMonthly"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textOff="Monthly"
-            android:textOn="Monthly" />
-    </LinearLayout>
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/repeat_type_button_selector"
+            android:button="@null"
+            android:padding="8dp"
+            android:text="Weekly"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </RadioGroup>
 
     <GridLayout
         android:id="@+id/daysOfWeekGrid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:columnCount="4"
         android:rowCount="2"
         android:visibility="gone"
@@ -174,5 +170,15 @@
         tools:layout_editor_absoluteX="20dp">
     </GridLayout>
 
-
+    <Button
+        android:id="@+id/btSaveHabit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_button_selector"
+        android:text="Сохранить"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:padding="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,7 +20,6 @@ interface HabitCompletionDao {
     @Query("SELECT date FROM habit_completion WHERE habitId = :habitId")
     suspend fun getCompletedDates(habitId: Int): List<String>
 
-    // Исправляем запрос, добавляя bonusAwarded в результат
     @Query("SELECT habitId, date, isCompleted, bonusAwarded FROM habit_completion")
     suspend fun getAllCompletedDates(): List<HabitCompletionEntity>
 
@@ -53,4 +52,8 @@ interface HabitCompletionDao {
 
     @Query("DELETE FROM habit_bonus WHERE habit_id = :habitId AND week_start = :weekStart AND week_end = :weekEnd")
     suspend fun revokeBonus(habitId: Int, weekStart: String, weekEnd: String)
+
+    // Добавляем новый метод
+    @Query("SELECT * FROM habit_completion WHERE date = :date AND isCompleted = 1")
+    suspend fun getCompletedHabitsOnDate(date: String): List<HabitCompletionEntity>
 }

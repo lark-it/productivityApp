@@ -1,6 +1,5 @@
 package com.example.productivity.habits.edit
 
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,7 +10,8 @@ import android.widget.EditText
 import android.widget.GridLayout
 import android.widget.ImageButton
 import android.widget.LinearLayout
-import android.widget.ToggleButton
+import android.widget.RadioGroup
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -38,11 +38,12 @@ class EditOneHabitFragment : BaseHabitFragment() {
             habitId = bundle.getInt("habitId", 0)
             habitTitle = bundle.getString("habitTitle", "") ?: ""
             selectedIcon = bundle.getInt("iconResId", 0)
-            selectedColor = bundle.getInt("habitColor",0)
+            selectedColor = bundle.getInt("habitColor", 0)
             selectedRepeatType = bundle.getParcelable("repeatType") ?: RepeatType.DAILY
             selectedDays.addAll(bundle.getIntegerArrayList("repeatDays") ?: emptyList())
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -72,24 +73,21 @@ class EditOneHabitFragment : BaseHabitFragment() {
             findNavController().navigateUp()
         }
 
-        //работаем с выбором типа повторения, выделил комменатрием, чтобы не захламлять
-        val buttonDaily = view.findViewById<ToggleButton>(R.id.buttonDaily)
-        val buttonWeekly = view.findViewById<ToggleButton>(R.id.buttonWeekly)
-        val buttonMonthly = view.findViewById<ToggleButton>(R.id.buttonMonthly)
-
+        val repeatTypeGroup = view.findViewById<RadioGroup>(R.id.repeatTypeGroup)
         daysOfWeekGrid = view.findViewById(R.id.daysOfWeekGrid)
 
         when (selectedRepeatType) {
             RepeatType.DAILY -> {
-                buttonDaily.isChecked = true
+                repeatTypeGroup.check(R.id.buttonDaily)
                 showWeeklyDays(false)
             }
             RepeatType.WEEKLY -> {
-                buttonWeekly.isChecked = true
+                repeatTypeGroup.check(R.id.buttonWeekly)
                 showWeeklyDays(true)
             }
-            RepeatType.MONTHLY -> {
-                buttonMonthly.isChecked = true
+            else -> {
+                selectedRepeatType = RepeatType.DAILY
+                repeatTypeGroup.check(R.id.buttonDaily)
                 showWeeklyDays(false)
             }
         }
@@ -100,32 +98,18 @@ class EditOneHabitFragment : BaseHabitFragment() {
             highlightSelectedDays()
         }
 
-
-        buttonDaily.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                selectedRepeatType = RepeatType.DAILY
-                buttonWeekly.isChecked = false
-                buttonMonthly.isChecked = false
-                showWeeklyDays(false)
+        repeatTypeGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.buttonDaily -> {
+                    selectedRepeatType = RepeatType.DAILY
+                    showWeeklyDays(false)
+                }
+                R.id.buttonWeekly -> {
+                    selectedRepeatType = RepeatType.WEEKLY
+                    showWeeklyDays(true)
+                }
             }
         }
-        buttonWeekly.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                selectedRepeatType = RepeatType.WEEKLY
-                buttonDaily.isChecked = false
-                buttonMonthly.isChecked = false
-                showWeeklyDays(true)
-            }
-        }
-        buttonMonthly.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                selectedRepeatType = RepeatType.MONTHLY
-                buttonDaily.isChecked = false
-                buttonWeekly.isChecked = false
-                showWeeklyDays(false)
-            }
-        }
-
     }
 
     private fun saveHabit(newTitle: String) {
@@ -138,7 +122,7 @@ class EditOneHabitFragment : BaseHabitFragment() {
         }
     }
 
-    private fun showWeeklyDays(show: Boolean){
+    private fun showWeeklyDays(show: Boolean) {
         daysOfWeekGrid.visibility = if (show) View.VISIBLE else View.GONE
     }
 
@@ -149,6 +133,16 @@ class EditOneHabitFragment : BaseHabitFragment() {
         for ((index, day) in daysNames.withIndex()) {
             val button = Button(requireContext()).apply {
                 text = day
+                textSize = 14f
+                setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+                setBackgroundResource(R.drawable.day_of_week_button_selector)
+                setPadding(16, 8, 16, 8)
+                layoutParams = GridLayout.LayoutParams().apply {
+                    width = 0
+                    height = GridLayout.LayoutParams.WRAP_CONTENT
+                    columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                    setMargins(6, 6, 6, 6)
+                }
                 setOnClickListener {
                     toggleDaySelection(index + 1, this)
                 }
@@ -160,25 +154,19 @@ class EditOneHabitFragment : BaseHabitFragment() {
     private fun toggleDaySelection(day: Int, button: Button) {
         if (selectedDays.contains(day)) {
             selectedDays.remove(day)
-            button.setBackgroundColor(Color.LTGRAY) // ⚪ Убираем выделение
+            button.isSelected = false
         } else {
             selectedDays.add(day)
-            button.setBackgroundColor(Color.GREEN) // 🟢 Добавляем выделение
+            button.isSelected = true
         }
         Log.d("RepeatDays", "Выбранные дни недели: $selectedDays")
     }
 
-
-    private fun highlightSelectedDays(){
-        for(i in 0 until daysOfWeekGrid.childCount){
+    private fun highlightSelectedDays() {
+        for (i in 0 until daysOfWeekGrid.childCount) {
             val button = daysOfWeekGrid.getChildAt(i) as Button
             val day = i + 1
-
-            if (selectedDays.contains(day)){
-                button.setBackgroundColor(Color.GREEN)
-            } else{
-                button.setBackgroundColor(Color.LTGRAY)
-            }
+            button.isSelected = selectedDays.contains(day)
         }
     }
 }
