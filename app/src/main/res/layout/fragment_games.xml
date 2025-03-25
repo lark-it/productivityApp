@@ -61,7 +61,7 @@
             android:layout_height="16dp"
             android:max="10"
             android:progress="0"
-            android:progressDrawable="@drawable/progress_bar_background" />
+            android:progressDrawable="@drawable/progress_bar_exp" />
 
         <TextView
             android:id="@+id/xpText"

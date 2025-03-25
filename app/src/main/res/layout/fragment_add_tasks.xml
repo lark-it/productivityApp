@@ -5,41 +5,53 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
-    android:gravity="center"
     android:background="@color/eerie_black">
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/ic_back"
+        android:background="@android:color/transparent"
+        app:tint="@android:color/white"/>
 
     <EditText
         android:id="@+id/et_task_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:drawable/editbox_background"
         android:hint="Название задачи"
         android:padding="12dp"
-        android:background="@android:drawable/editbox_background"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/et_task_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@android:drawable/editbox_background"
+        android:clickable="true"
+        android:focusable="false"
         android:hint="Дата задачи"
         android:padding="12dp"
-        android:background="@android:drawable/editbox_background"
         android:textSize="16sp"
-        android:focusable="false"
-        android:clickable="true"
-        android:layout_marginTop="8dp"/>
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/et_task_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@android:drawable/editbox_background"
+        android:clickable="true"
+        android:focusable="false"
         android:hint="Время задачи"
         android:padding="12dp"
-        android:background="@android:drawable/editbox_background"
         android:textSize="16sp"
-        android:focusable="false"
-        android:clickable="true"
-        android:layout_marginTop="8dp"/>
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -52,9 +64,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:text="Важность:"
+            android:text="Важность 💰:"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <RadioGroup
             android:id="@+id/radio_group_importance"
@@ -66,20 +79,29 @@
                 android:id="@+id/radio_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="true"
                 android:text="1"
-                android:checked="true"/>
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/radio_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2"/>
+                android:text="2"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/radio_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="3"/>
+                android:text="3"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
         </RadioGroup>
     </LinearLayout>
 
@@ -90,6 +112,7 @@
         android:layout_marginTop="16dp"
         android:backgroundTint="#2D0F5D"
         android:text="Сохранить"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
 
 </LinearLayout>

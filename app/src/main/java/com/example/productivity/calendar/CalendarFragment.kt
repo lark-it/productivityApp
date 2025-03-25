@@ -175,7 +175,7 @@ class CalendarFragment : Fragment() {
 
             if (wasCompleted && !isCompleted) {
                 userRepository.addCoinsAndXP(-coinChange, -xpChange)
-                viewModel.decreaseLifeIfRecent(task.date) // Отнимаем жизнь при отмене
+                viewModel.decreaseLifeIfRecent(task.date)
             } else if (!wasCompleted && isCompleted) {
                 userRepository.addCoinsAndXP(coinChange, xpChange)
                 // Добавляем жизнь при выполнении задачи
@@ -345,7 +345,19 @@ class CalendarFragment : Fragment() {
                 }
             }
 
-            requireActivity().runOnUiThread { taskAdapter.submitList(mergedData) }
+            requireActivity().runOnUiThread {
+                taskAdapter.submitList(mergedData)
+                val todayDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                val todayIndex = mergedData.indexOfFirst {
+                    it is CalendarItem.DateHeader && it.date == todayDate
+                }
+                if (todayIndex != -1) {
+                    view?.findViewById<RecyclerView>(R.id.rv_task_list)?.post {
+                        view?.findViewById<RecyclerView>(R.id.rv_task_list)?.scrollToPosition(todayIndex)
+                    }
+                }
+            }
+
         }
     }
 

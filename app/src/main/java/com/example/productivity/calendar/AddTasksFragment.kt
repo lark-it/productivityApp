@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -88,7 +89,9 @@ class AddTasksFragment : Fragment() {
                     .show()
             }
         }
-
+        view.findViewById<ImageButton>(R.id.backButton).setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun saveTaskToDatabase(title: String, date: String, time: String, importance: Int) {

@@ -9,8 +9,8 @@
 
     <ImageButton
         android:id="@+id/buttonBack"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_margin="10dp"
         android:layout_marginTop="24dp"
         android:scaleType="fitCenter"
@@ -18,7 +18,9 @@
         app:layout_constraintHorizontal_bias="0.044"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_left" />
+        app:srcCompat="@drawable/ic_back"
+        android:background="@android:color/transparent"
+        app:tint="@android:color/white"/>
 
     <TextView
         android:id="@+id/textView2"
