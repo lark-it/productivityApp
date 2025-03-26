@@ -27,12 +27,13 @@ class ShopFragment : Fragment() {
 
     private val skins = listOf(
         R.drawable.pet_default,
-        R.drawable.pet_blue,
-        R.drawable.pet_red
-
+        R.drawable.pet_flower,
+        R.drawable.pet_knight,
+        R.drawable.pet_wizard,
+        R.drawable.pet_king
     )
 
-    private val skinPrices = listOf(0, 10, 20, 30)
+    private val skinPrices = listOf(0, 15, 30, 50, 100)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

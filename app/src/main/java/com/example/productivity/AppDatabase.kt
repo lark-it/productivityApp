@@ -14,17 +14,21 @@ import com.example.productivity.habits.HabitsEntity
 import com.example.productivity.home.HabitBonusEntity
 import com.example.productivity.home.UserDao
 import com.example.productivity.home.UserEntity
+import com.example.productivity.home.achievement.AchievementDao
+import com.example.productivity.home.achievement.AchievementEntity
 
 @Database(
     entities = [TaskEntity::class, HabitsEntity::class,
-        HabitCompletionEntity::class, UserEntity::class, HabitBonusEntity::class],
-    version = 10)
+        HabitCompletionEntity::class, UserEntity::class, HabitBonusEntity::class,
+        AchievementEntity::class],
+    version = 11)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
     abstract fun habitsDao(): HabitsDao
     abstract fun habitCompletionDao(): HabitCompletionDao
     abstract fun userDao(): UserDao
+    abstract fun achievementDao(): AchievementDao
 
     companion object {
         @Volatile

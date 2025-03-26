@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.db.williamchart.data.AxisType
 import com.example.productivity.AppDatabase
@@ -30,6 +31,9 @@ import com.example.productivity.calendar.TaskAdapter
 import com.example.productivity.calendar.TaskDao
 import com.example.productivity.habits.HabitsDao
 import com.example.productivity.habits.today.TodayAdapter
+import com.example.productivity.home.achievement.AchievementAdapter
+import com.example.productivity.home.achievement.AchievementDao
+import com.example.productivity.home.achievement.AchievementEntity
 import java.text.ParseException
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -67,6 +71,53 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.updateLives()
         }
+        initAchievements()
+        loadAchievements()
+
+    }
+    private fun initAchievements() {
+        lifecycleScope.launch {
+            val dao = db.achievementDao()
+            val existing = dao.getAll()
+            if (existing.isEmpty()) {
+                dao.insert(AchievementEntity("first_task", "Первая задача", "Выполни первую задачу"))
+                dao.insert(AchievementEntity("first_habit", "Первая привычка", "Выполни первую привычку"))
+                dao.insert(AchievementEntity("three_in_day", "3 за день", "Выполни 3 дела за один день"))
+            }
+        }
+    }
+    private suspend fun checkAchievements(completedTasks: Int, completedHabits: Int) {
+        val dao = db.achievementDao()
+
+        if (completedTasks >= 1) {
+            unlockAchievement(dao, "first_task")
+        }
+        if (completedHabits >= 1) {
+            unlockAchievement(dao, "first_habit")
+        }
+        if ((completedTasks + completedHabits) >= 3) {
+            unlockAchievement(dao, "three_in_day")
+        }
+    }
+
+    private suspend fun unlockAchievement(dao: AchievementDao, id: String) {
+        val achievement = dao.getAll().find { it.id == id && !it.isUnlocked } ?: return
+        dao.update(achievement.copy(isUnlocked = true, unlockDate = getToday()))
+    }
+    private fun loadAchievements() {
+        lifecycleScope.launch {
+            val achievements = db.achievementDao().getAll()
+
+            requireActivity().runOnUiThread {
+                val recycler = view?.findViewById<RecyclerView>(R.id.rv_achievements)
+                recycler?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false) // ← вот это обязательно!
+                recycler?.adapter = AchievementAdapter(achievements)
+            }
+        }
+    }
+
+    private fun getToday(): String {
+        return SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
     }
 
     fun loadUserData() {
@@ -89,9 +140,8 @@ class HomeFragment : Fragment() {
             val habitCompletionDao = db.habitCompletionDao()
             val taskDao = db.taskDao()
 
-            // Получаем все привычки
             val allHabits = habitsDao.getAllHabits()
-            // Фильтруем привычки, которые должны быть выполнены сегодня
+
             val todayHabits = allHabits.filter { habit ->
                 val calendar = Calendar.getInstance()
                 val startDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(habit.startDate)
@@ -109,18 +159,19 @@ class HomeFragment : Fragment() {
                 }
             }
 
-            // Объявляем переменные на уровне метода
             val totalHabitsToday = todayHabits.size
-            // Получаем выполненные привычки за сегодня
+
             val completedHabits = habitCompletionDao.getCompletedHabitsOnDate(todayDate)
             val completedHabitsToday = completedHabits.count { completion: HabitCompletionEntity ->
                 todayHabits.any { it.id == completion.habitId }
             }
 
-            // Получаем задачи за сегодня
+
             val todayTasks = taskDao.getTasksByDate(todayDate)
             val totalTasksToday = todayTasks.size
             val completedTasksToday = todayTasks.count { it.isCompleted }
+
+            checkAchievements(completedTasksToday, completedHabitsToday)
 
             requireActivity().runOnUiThread {
                 view?.findViewById<TextView>(R.id.tv_today_habits)?.text = "Привычки: $completedHabitsToday/$totalHabitsToday"
@@ -276,9 +327,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-
-
-
     private fun setupCompletionRateChart() {
         lifecycleScope.launch {
             val db = AppDatabase.getDatabase(requireContext())
@@ -287,18 +335,17 @@ class HomeFragment : Fragment() {
             val fullDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val dayFormat = SimpleDateFormat("d", Locale.getDefault())
 
-            // Создаём список дат для последних 6 недель
             val last6Weeks = mutableListOf<String>()
             val calendar = Calendar.getInstance()
             for (i in 0..5) {
-                calendar.time = Date(System.currentTimeMillis()) // Сбрасываем календарь на текущую дату
-                calendar.add(Calendar.DAY_OF_YEAR, -i * 7) // Отнимаем i недель
+                calendar.time = Date(System.currentTimeMillis())
+                calendar.add(Calendar.DAY_OF_YEAR, -i * 7)
                 last6Weeks.add(fullDateFormat.format(calendar.time))
             }
-            last6Weeks.reverse() // Разворачиваем, чтобы даты шли от старых к новым
+            last6Weeks.reverse()
 
             val completionRateData = last6Weeks.map { weekStartDate ->
-                val calendarForEndOfWeek = Calendar.getInstance() // Новый календарь для каждой итерации
+                val calendarForEndOfWeek = Calendar.getInstance()
                 calendarForEndOfWeek.time = fullDateFormat.parse(weekStartDate) ?: Date()
                 calendarForEndOfWeek.add(Calendar.DAY_OF_YEAR, 6)
                 val endOfWeek = calendarForEndOfWeek.time
