@@ -28,12 +28,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/eerie_black"
-        app:menu="@menu/bottom_navigation_menu"
-        app:labelVisibilityMode="labeled"
+        android:paddingTop="6dp"
         app:itemIconTint="@color/bottom_nav_item_color"
         app:itemTextColor="@color/bottom_nav_item_color"
+        app:itemBackground="@drawable/bottom_nav_item_background"
+        app:labelVisibilityMode="unlabeled"
 
+        style="@style/BottomNavCleanStyle"
+        app:menu="@menu/bottom_navigation_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

@@ -7,11 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.productivity.R
 import com.example.productivity.AppDatabase
+import com.example.productivity.home.MainViewModel
+import com.example.productivity.home.MainViewModelFactory
 import com.example.productivity.home.UserRepository
 import kotlinx.coroutines.launch
 
@@ -19,11 +23,15 @@ class ShopFragment : Fragment() {
 
     private lateinit var skinPreview: ImageView
     private lateinit var buyButton: Button
-    private lateinit var prevButton: Button
-    private lateinit var nextButton: Button
     private lateinit var backButton: Button
     private lateinit var userRepository: UserRepository
     private var selectedSkinIndex = 0
+    private lateinit var prevButton: ImageButton
+    private lateinit var nextButton: ImageButton
+    private lateinit var viewModel: MainViewModel
+    private lateinit var healButton: ImageButton
+    private lateinit var healPopup: View
+    private lateinit var confirmHealButton: Button
 
     private val skins = listOf(
         R.drawable.pet_default,
@@ -47,24 +55,19 @@ class ShopFragment : Fragment() {
 
         skinPreview = view.findViewById(R.id.skinPreview)
         buyButton = view.findViewById(R.id.buyButton)
-        prevButton = view.findViewById(R.id.prevSkinButton)
-        nextButton = view.findViewById(R.id.nextSkinButton)
         backButton = view.findViewById(R.id.backButton)
 
         val db = AppDatabase.getDatabase(requireContext())
+
+        val taskDao = db.taskDao()
+        val habitsDao = db.habitsDao()
+
         userRepository = UserRepository(db.userDao())
+        viewModel = ViewModelProvider(requireActivity(), MainViewModelFactory(userRepository, taskDao, habitsDao, requireContext()))
+            .get(MainViewModel::class.java)
+
 
         updateSkinPreview()
-
-        prevButton.setOnClickListener {
-            selectedSkinIndex = if (selectedSkinIndex > 0) selectedSkinIndex - 1 else skins.size - 1
-            updateSkinPreview()
-        }
-
-        nextButton.setOnClickListener {
-            selectedSkinIndex = if (selectedSkinIndex < skins.size - 1) selectedSkinIndex + 1 else 0
-            updateSkinPreview()
-        }
 
         buyButton.setOnClickListener {
             if (isSkinPurchased(skins[selectedSkinIndex])) {
@@ -77,6 +80,52 @@ class ShopFragment : Fragment() {
         backButton.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+
+
+        healButton = view.findViewById(R.id.healButton)
+        healPopup = view.findViewById(R.id.healPopup)
+        confirmHealButton = view.findViewById(R.id.confirmHealButton)
+
+        healButton.setOnClickListener {
+            lifecycleScope.launch {
+                val user = userRepository.getUser()
+                if (user.lives >= 3) {
+                    Toast.makeText(requireContext(), "У вас уже максимум жизней", Toast.LENGTH_SHORT).show()
+                } else {
+                    healPopup.visibility = View.VISIBLE
+                }
+            }
+        }
+
+        confirmHealButton.setOnClickListener {
+            lifecycleScope.launch {
+                val user = userRepository.getUser()
+                if (user.coins >= 5 && user.lives < 3) {
+                    userRepository.addCoinsAndXP(-5, 0)
+                    userRepository.updateLives(user.lives + 1)
+                    viewModel.updateLives()
+                    Toast.makeText(requireContext(), "Жизнь восстановлена!", Toast.LENGTH_SHORT).show()
+                }
+ else {
+                    Toast.makeText(requireContext(), "Недостаточно монет или максимум жизней", Toast.LENGTH_SHORT).show()
+                }
+                healPopup.visibility = View.GONE
+            }
+        }
+
+        prevButton = view.findViewById(R.id.prevSkinButton)
+        nextButton = view.findViewById(R.id.nextSkinButton)
+
+        prevButton.setOnClickListener {
+            selectedSkinIndex = if (selectedSkinIndex > 0) selectedSkinIndex - 1 else skins.size - 1
+            updateSkinPreview()
+        }
+
+        nextButton.setOnClickListener {
+            selectedSkinIndex = if (selectedSkinIndex < skins.size - 1) selectedSkinIndex + 1 else 0
+            updateSkinPreview()
+        }
+
     }
 
     private fun updateSkinPreview() {

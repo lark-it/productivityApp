@@ -1,0 +1,6 @@
+<!-- res/drawable/selected_nav_bg.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/dark_gunmetal"/> <!-- заменишь на свой нужный цвет -->
+    <corners android:radius="16dp"/> <!-- красивый скруглённый фон -->
+</shape>

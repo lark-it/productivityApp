@@ -2,48 +2,128 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@drawable/background_shop"
     android:gravity="center">
-    <Button
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Назад"
-        android:layout_marginTop="16dp"/>
+        android:paddingTop="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="@android:color/transparent"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="8dp"
+            android:text="Назад"
+            android:textColor="#FF8C00"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cornerRadius="30dp"
+            app:strokeColor="#fe8100"
+            app:strokeWidth="5dp" />
+
+        <ImageButton
+            android:id="@+id/healButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_medkit"
+            android:background="@android:color/transparent"
+            android:contentDescription="Вылечить питомца"
+            android:scaleType="centerInside"/>
+    </FrameLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center">
 
-        <!-- Кнопка "Назад" -->
-        <Button
+        <ImageButton
             android:id="@+id/prevSkinButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="&#60;"/>
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_last"
+            android:background="@android:color/transparent"
+            android:contentDescription="Previous Skin"
+            android:scaleType="centerInside"
+            android:layout_marginEnd="-30dp"/>
 
         <ImageView
             android:id="@+id/skinPreview"
-            android:layout_width="200dp"
-            android:layout_height="400dp"
-            android:layout_marginHorizontal="16dp"
-            android:src="@drawable/pet_default"/>
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:src="@drawable/pet_default" />
 
-        <!-- Кнопка "Вперед" -->
-        <Button
+        <ImageButton
             android:id="@+id/nextSkinButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="&#62;"/>
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_next"
+            android:background="@android:color/transparent"
+            android:contentDescription="Next Skin"
+            android:scaleType="centerInside"
+            android:layout_marginStart="-30dp"/>
     </LinearLayout>
 
-    <Button
+    <LinearLayout
+        android:id="@+id/healPopup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/popup_background"
+        android:padding="16dp"
+        android:layout_marginTop="20dp"
+        android:visibility="gone"
+        android:elevation="8dp">
+
+
+        <TextView
+            android:id="@+id/healText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Восстановить 1 жизнь за 5 монет?"
+            android:textColor="#FF8C00"
+            android:textStyle="bold"
+            android:textSize="18sp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/confirmHealButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="#FF8C00"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cornerRadius="30dp"
+            app:rippleColor="#22000000"
+            app:strokeColor="#fe8100"
+            app:strokeWidth="5dp"
+            android:layout_gravity="center"
+            android:text="Купить"/>
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/buyButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Купить за 10 монет"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@android:color/transparent"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="10dp"
+        android:text="Выбрать"
+        android:textColor="#FF8C00"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:cornerRadius="30dp"
+        app:rippleColor="#22000000"
+        app:strokeColor="#fe8100"
+        app:strokeWidth="5dp" />
 
 </LinearLayout>
