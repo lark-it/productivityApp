@@ -58,3 +58,10 @@ local.properties
 
 # Virtual device logs
 hs_err_pid*
+
+# Firebase config
+app/google-services.json
+
+# Локальные строки, API ключи и прочее
+app/src/main/res/values/strings.xml
+

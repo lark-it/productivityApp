@@ -16,9 +16,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.example.productivity.R
 import com.example.productivity.notifications.NotificationReceiver
 import java.util.*
+import com.bumptech.glide.Glide
 
 class SettingsFragment : Fragment() {
 
@@ -26,6 +28,11 @@ class SettingsFragment : Fragment() {
     private lateinit var btnPickTime: Button
     private lateinit var timeText: TextView
     private lateinit var checkboxHabits: CheckBox
+    private lateinit var textUsername: TextView
+    private lateinit var btnConnectGoogle: Button
+    private lateinit var btnLogout: Button
+    private lateinit var imageAvatar: ImageView
+    private lateinit var textEmail: TextView
 
     private var savedHour = 8
     private var savedMinute = 0
@@ -40,12 +47,18 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        textUsername = view.findViewById(R.id.textUsername)
+        btnConnectGoogle = view.findViewById(R.id.btnConnectGoogle)
+        btnLogout = view.findViewById(R.id.btnLogout)
+
         val sharedPrefs = requireContext().getSharedPreferences("settings", Context.MODE_PRIVATE)
 
         switchNotifications = view.findViewById(R.id.switchNotifications)
         btnPickTime = view.findViewById(R.id.btnPickTime)
         timeText = view.findViewById(R.id.notificationTimeText)
         checkboxHabits = view.findViewById(R.id.checkboxHabits)
+        imageAvatar = view.findViewById(R.id.imageAvatar)
+        textEmail = view.findViewById(R.id.textEmail)
 
         savedHour = sharedPrefs.getInt("hour", 8)
         savedMinute = sharedPrefs.getInt("minute", 0)
@@ -109,13 +122,44 @@ class SettingsFragment : Fragment() {
         checkboxHabits.setOnCheckedChangeListener { _, isChecked ->
             sharedPrefs.edit().putBoolean("notify_habits", isChecked).apply()
         }
+        val userPrefs = requireContext().getSharedPreferences("user", Context.MODE_PRIVATE)
+        val username = userPrefs.getString("username", null)
 
-        val btnTestNotification = view.findViewById<Button>(R.id.btnTestNotification)
-        btnTestNotification.setOnClickListener {
-            val intent = Intent(requireContext(), NotificationReceiver::class.java)
-            requireContext().sendBroadcast(intent)
-            Toast.makeText(requireContext(), "Тестовое уведомление отправлено", Toast.LENGTH_SHORT).show()
+        val user = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            textUsername.text = user.displayName ?: username ?: "Без имени"
+            textEmail.text = user.email ?: ""
+            btnConnectGoogle.visibility = View.GONE
+            btnLogout.visibility = View.VISIBLE
+
+            val photoUrl = user.photoUrl
+            if (photoUrl != null) {
+                Glide.with(this)
+                    .load(photoUrl)
+                    .circleCrop()
+                    .into(imageAvatar)
+            }
         }
+
+        btnLogout.setOnClickListener {
+            com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
+            val userPrefs = requireContext().getSharedPreferences("user", Context.MODE_PRIVATE)
+            userPrefs.edit().clear().apply()
+
+            Toast.makeText(requireContext(), "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show()
+
+            // Навигация на экран логина
+            val navController = requireActivity()
+                .supportFragmentManager
+                .findFragmentById(R.id.nav_host_fragment)
+                ?.findNavController()
+
+            navController?.navigate(R.id.loginFragment)
+        }
+
+
+
+
     }
 
     private fun setDailyReminder(hour: Int, minute: Int) {

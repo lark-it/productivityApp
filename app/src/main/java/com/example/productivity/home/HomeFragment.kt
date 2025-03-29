@@ -37,6 +37,9 @@ import com.example.productivity.home.achievement.AchievementEntity
 import java.text.ParseException
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import com.google.firebase.auth.FirebaseAuth
+import com.bumptech.glide.Glide
+import android.widget.ImageView
 
 class HomeFragment : Fragment() {
     private lateinit var userRepository: UserRepository
@@ -124,6 +127,19 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             val user = userRepository.getUser()
             Log.d("HomeFragment", "Обновляем UI: монеты=${user.coins}, XP=${user.xp}")
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
+            requireActivity().runOnUiThread {
+                val name = firebaseUser?.displayName ?: "Гость"
+                view?.findViewById<TextView>(R.id.userName)?.text = "Hey, $name"
+
+                firebaseUser?.photoUrl?.let { url ->
+                    val imageView = view?.findViewById<ImageView>(R.id.profileImage)
+                    Glide.with(this@HomeFragment)
+                        .load(url)
+                        .circleCrop()
+                        .into(imageView!!)
+                }
+            }
 
             requireActivity().runOnUiThread {
                 view?.findViewById<TextView>(R.id.tv_coins)?.text = "💰 ${user.coins}"
@@ -318,7 +334,7 @@ class HomeFragment : Fragment() {
                     animate(habitsData)
                     barsColor = ContextCompat.getColor(requireContext(), R.color.purple_navy)
                     labelsColor = Color.WHITE
-                    labelsSize = 52f // <-- добавили, чтобы совпадал шрифт
+                    labelsSize = 52f
                     axis = AxisType.XY
                     spacing = 40f
                     labelsFormatter = { value -> value.toInt().toString() }

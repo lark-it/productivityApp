@@ -36,7 +36,7 @@ class UserRepository(private val userDao: UserDao) {
     }
 
     private suspend fun updateLevelAndRank(user: UserEntity) {
-        val xpThresholds = listOf(0, 10, 40, 90, 170, 290, 440)
+        val xpThresholds = listOf(0, 10, 40, 80, 130, 190, 260, 340, 430, 520, 620)
 
         val newLevel = xpThresholds.indexOfFirst { user.xp < it }.coerceAtLeast(1)
         val newRank = getRankForLevel(newLevel)
@@ -52,29 +52,29 @@ class UserRepository(private val userDao: UserDao) {
 
     private fun getRankForLevel(level: Int): String {
         return when (level) {
-            in 1..5 -> "Новичок"
-            in 6..10 -> "Ученик"
-            in 11..20 -> "Мастер"
-            in 21..30 -> "Эксперт"
-            in 31..50 -> "Легенда"
+            in 1..2 -> "Новичок"
+            in 3..4 -> "Ученик"
+            in 5..6 -> "Мастер"
+            in 7..8 -> "Эксперт"
+            in 9..10 -> "Легенда"
             else -> "Бог продуктивности"
         }
     }
 
     fun getXpForNextLevel(currentLevel: Int): Int {
-        val xpThresholds = listOf(0, 10, 40, 90, 170, 290, 440)
+        val xpThresholds = listOf(0, 10, 40, 80, 130, 190, 260, 340, 430, 520, 620)
         return xpThresholds.getOrElse(currentLevel) { 440 }
     }
 
     fun getXpForCurrentLevel(currentLevel: Int): Int {
-        val xpThresholds = listOf(0, 10, 40, 90, 170, 290, 440)
+        val xpThresholds = listOf(0, 10, 40, 80, 130, 190, 260, 340, 430, 520, 620)
         return xpThresholds.getOrElse(currentLevel - 1) { 0 }
     }
 
     fun getXpMaxForLevel(currentLevel: Int): Int {
-        val xpThresholds = listOf(0, 10, 40, 90, 170, 290, 440)
+        val xpThresholds = listOf(0, 10, 40, 80, 130, 190, 260, 340, 430, 520, 620)
         val current = xpThresholds.getOrElse(currentLevel - 1) { 0 }
         val next = xpThresholds.getOrElse(currentLevel) { 440 }
-        return next - current // 10, 30, 50, 80, 120, 150...
+        return next - current
     }
 }
