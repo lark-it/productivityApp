@@ -13,21 +13,23 @@
         android:orientation="vertical"
         android:divider="@android:color/darker_gray"
         android:showDividers="middle"
+        android:layout_marginTop="20dp"
         android:dividerPadding="8dp">
 
         <TextView
-            android:text="👤 Аккаунт"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:paddingTop="8dp"
+            android:text="👤 Аккаунт"
             android:textColor="@android:color/white"
-            android:paddingTop="8dp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
             <ImageView
                 android:id="@+id/imageAvatar"
                 android:layout_width="80dp"
@@ -39,28 +41,37 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/textUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingTop="4dp"
                     android:text="Гость"
                     android:textColor="@android:color/white"
-                    android:layout_gravity="center_horizontal"
-                    android:paddingTop="4dp"/>
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/textEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
                     android:layout_gravity="center_horizontal"
-                    android:paddingTop="2dp"/>
+                    android:paddingTop="2dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/btnConnectGoogle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Подключить Google аккаунт" />
+                    android:text="Подключить Google аккаунт"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/btnLogout"
@@ -79,30 +90,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Сохранять прогресс в аккаунт"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:text="🔔 Уведомления"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:text="🔔 Уведомления"
             android:textColor="@android:color/white"
-            android:paddingTop="16dp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <Switch
             android:id="@+id/switchNotifications"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Получать уведомления"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold" />
 
         <TextView
-            android:text="Время уведомления"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:text="Время уведомления"
             android:textColor="@android:color/white"
-            android:paddingTop="8dp" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -113,16 +131,20 @@
             <TextView
                 android:id="@+id/notificationTimeText"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="08:00"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnPickTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Изменить" />
+                android:text="Изменить"
+                android:textSize="16sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <CheckBox
@@ -130,34 +152,45 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Напоминать о привычках"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:text="📱 О приложении"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:text="📱 О приложении"
             android:textColor="@android:color/white"
-            android:paddingTop="16dp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Версия: 1.0.0"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/btnRateApp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Оценить приложение" />
+            android:text="Оценить приложение"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/btnContactDev"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Связаться с разработчиком" />
+            android:text="Связаться с разработчиком"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 </ScrollView>

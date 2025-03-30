@@ -148,7 +148,6 @@ class SettingsFragment : Fragment() {
 
             Toast.makeText(requireContext(), "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show()
 
-            // Навигация на экран логина
             val navController = requireActivity()
                 .supportFragmentManager
                 .findFragmentById(R.id.nav_host_fragment)
@@ -156,9 +155,6 @@ class SettingsFragment : Fragment() {
 
             navController?.navigate(R.id.loginFragment)
         }
-
-
-
 
     }
 

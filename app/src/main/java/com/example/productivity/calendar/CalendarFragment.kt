@@ -26,6 +26,7 @@ import com.example.productivity.home.HabitBonusEntity
 import com.example.productivity.home.MainViewModel
 import com.example.productivity.home.MainViewModelFactory
 import com.example.productivity.home.UserRepository
+import com.example.productivity.util.Constants.MAX_LIVES
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -178,10 +179,8 @@ class CalendarFragment : Fragment() {
                 viewModel.decreaseLifeIfRecent(task.date)
             } else if (!wasCompleted && isCompleted) {
                 userRepository.addCoinsAndXP(coinChange, xpChange)
-                // Добавляем жизнь при выполнении задачи
                 val currentLives = userRepository.getUser().lives
-                val maxLives = 3
-                if (currentLives < maxLives) {
+                if (currentLives < MAX_LIVES) {
                     val newLives = currentLives + 1
                     userRepository.updateLives(newLives)
                     viewModel.lives.postValue(newLives)
@@ -211,8 +210,7 @@ class CalendarFragment : Fragment() {
                 userRepository.addCoinsAndXP(coins = coinChange, xp = xpChange)
                 // Добавляем жизнь при выполнении привычки
                 val currentLives = userRepository.getUser().lives
-                val maxLives = 3
-                if (currentLives < maxLives) {
+                if (currentLives < MAX_LIVES) {
                     val newLives = currentLives + 1
                     userRepository.updateLives(newLives)
                     viewModel.lives.postValue(newLives)

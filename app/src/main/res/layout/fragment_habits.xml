@@ -48,25 +48,31 @@
             android:id="@+id/btnToday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="Today"
             android:textColor="@color/white"
-            android:padding="10dp"/>
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/btnWeekly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="Weekly"
             android:textColor="@color/white"
-            android:padding="10dp"/>
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/btnOverall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="Overall"
             android:textColor="@color/white"
-            android:padding="10dp"/>
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

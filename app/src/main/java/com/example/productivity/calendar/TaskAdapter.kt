@@ -104,14 +104,12 @@ class TaskAdapter(
                 deleteButton.setColorFilter(Color.parseColor("#818190"))
                 editButton.setColorFilter(Color.parseColor("#818190"))
                 tvImportant.setTextColor(Color.parseColor("#818190"))
-                ivMoneyIcon.setColorFilter(Color.parseColor("#818190"))
             } else {
                 textView.paintFlags = textView.paintFlags and android.graphics.Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 textView.setTextColor(Color.WHITE)
                 deleteButton.setColorFilter(Color.WHITE)
                 editButton.setColorFilter(Color.WHITE)
                 tvImportant.setTextColor(Color.WHITE)
-                ivMoneyIcon.setColorFilter(Color.WHITE)
             }
 
             checkBox.setOnCheckedChangeListener { _, isChecked ->

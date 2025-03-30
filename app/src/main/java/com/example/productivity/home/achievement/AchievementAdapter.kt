@@ -1,5 +1,6 @@
 package com.example.productivity.home.achievement
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +31,17 @@ class AchievementAdapter(
         val item = achievements[position]
         holder.title.text = item.title
         holder.desc.text = item.description
-        holder.icon.alpha = if (item.isUnlocked) 1.0f else 0.4f
+        if (item.isUnlocked) {
+            holder.icon.setImageResource(R.drawable.ic_trophy)
+            holder.icon.alpha = 1.0f
+            holder.title.setTextColor(Color.WHITE)
+            holder.desc.setTextColor(Color.parseColor("#A1A1A1"))
+        } else {
+            holder.icon.setImageResource(R.drawable.ic_lock)
+            holder.icon.alpha = 0.5f
+            holder.title.setTextColor(Color.GRAY)
+            holder.desc.setTextColor(Color.GRAY)
+        }
+
     }
 }

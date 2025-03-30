@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
@@ -63,16 +64,29 @@ class EditHabitsFragment : DialogFragment() {
         recyclerView?.adapter = adapter
 
         loadHabits()
-
     }
+
     private fun loadHabits() {
         lifecycleScope.launch {
             val habitsFromDb = habitDao.getAllHabits()
             habits.clear()
             habits.addAll(habitsFromDb)
             adapter.updateList(habits)
+
+            // Управление видимостью TextView
+            val emptyTextView = view?.findViewById<TextView>(R.id.tv_empty_habits)
+            requireActivity().runOnUiThread {
+                if (habits.isEmpty()) {
+                    emptyTextView?.visibility = View.VISIBLE
+                    view?.findViewById<RecyclerView>(R.id.rv_edit_habits)?.visibility = View.GONE
+                } else {
+                    emptyTextView?.visibility = View.GONE
+                    view?.findViewById<RecyclerView>(R.id.rv_edit_habits)?.visibility = View.VISIBLE
+                }
+            }
         }
     }
+
     private fun deleteHabit(habit: HabitsEntity) {
         AlertDialog.Builder(requireContext())
             .setTitle("Удалить привычку?")

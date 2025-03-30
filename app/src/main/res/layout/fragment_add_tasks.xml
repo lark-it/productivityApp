@@ -113,6 +113,7 @@
         android:backgroundTint="#2D0F5D"
         android:text="Сохранить"
         android:textColor="@android:color/white"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
 </LinearLayout>

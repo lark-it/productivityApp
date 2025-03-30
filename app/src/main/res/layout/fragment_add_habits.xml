@@ -65,7 +65,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Название привычки"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textColor="#FFFFFF" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -186,10 +187,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/rounded_button_selector"
+                    android:padding="8dp"
                     android:text="Выбрать дату"
                     android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:padding="8dp" />
+                    android:textSize="16sp" />
             </LinearLayout>
 
         </LinearLayout>

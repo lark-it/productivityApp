@@ -17,6 +17,7 @@ import com.example.productivity.AppDatabase
 import com.example.productivity.home.MainViewModel
 import com.example.productivity.home.MainViewModelFactory
 import com.example.productivity.home.UserRepository
+import com.example.productivity.util.Constants.MAX_LIVES
 import kotlinx.coroutines.launch
 
 class ShopFragment : Fragment() {
@@ -89,7 +90,7 @@ class ShopFragment : Fragment() {
         healButton.setOnClickListener {
             lifecycleScope.launch {
                 val user = userRepository.getUser()
-                if (user.lives >= 3) {
+                if (user.lives >= MAX_LIVES) {
                     Toast.makeText(requireContext(), "У вас уже максимум жизней", Toast.LENGTH_SHORT).show()
                 } else {
                     healPopup.visibility = View.VISIBLE
@@ -100,7 +101,7 @@ class ShopFragment : Fragment() {
         confirmHealButton.setOnClickListener {
             lifecycleScope.launch {
                 val user = userRepository.getUser()
-                if (user.coins >= 5 && user.lives < 3) {
+                if (user.coins >= 5 && user.lives < MAX_LIVES) {
                     userRepository.addCoinsAndXP(-5, 0)
                     userRepository.updateLives(user.lives + 1)
                     viewModel.updateLives()

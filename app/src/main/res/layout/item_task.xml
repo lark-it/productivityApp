@@ -26,16 +26,16 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
+        android:paddingStart="4dp"
         android:text="3"
-        android:textSize="14sp"
         android:textColor="@color/white"
-        android:textStyle="bold"
-        android:paddingStart="4dp" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/iv_money_icon"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginStart="2dp"
         android:layout_gravity="center_vertical"
         android:src="@drawable/ic_money" />
@@ -47,7 +47,8 @@
         android:gravity="center"
         android:text="14:00"
         android:textColor="@color/white"
-        android:textSize="14sp" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <ImageButton
         android:id="@+id/delete_button"

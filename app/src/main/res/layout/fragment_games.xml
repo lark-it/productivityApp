@@ -4,14 +4,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/tamagotchi_background">
 
-    <Button
-        android:id="@+id/addXpButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Добавить 10 XP"
-        android:layout_marginTop="20dp"
-        />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -129,11 +121,12 @@
         android:id="@+id/reviveLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:gravity="center"
-        android:background="@android:color/darker_gray"
+        android:background="@color/dark_gunmetal"
         android:padding="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginHorizontal="10dp"
         android:visibility="gone">
 
         <TextView
@@ -142,15 +135,19 @@
             android:layout_height="wrap_content"
             android:text="Ваш питомец умер! Воскресить за 20 монет?"
             android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/reviveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
             android:text="Воскресить"
-            android:textSize="14sp" />
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 

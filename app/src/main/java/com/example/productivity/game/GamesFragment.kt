@@ -25,6 +25,7 @@ import com.example.productivity.R
 import com.example.productivity.home.MainViewModel
 import com.example.productivity.home.UserRepository
 import android.view.animation.AccelerateDecelerateInterpolator
+import com.example.productivity.util.Constants.MAX_LIVES
 import kotlinx.coroutines.launch
 
 class GamesFragment : Fragment() {
@@ -39,7 +40,6 @@ class GamesFragment : Fragment() {
     private lateinit var xpText: TextView
     private lateinit var levelText: TextView
     private lateinit var rankText: TextView
-    private lateinit var addXpButton: Button
     private lateinit var userRepository: UserRepository
     private val viewModel: MainViewModel by activityViewModels()
 
@@ -63,7 +63,6 @@ class GamesFragment : Fragment() {
         xpText = view.findViewById(R.id.xpText)
         levelText = view.findViewById(R.id.levelText)
         rankText = view.findViewById(R.id.rankText)
-        addXpButton = view.findViewById(R.id.addXpButton)
 
         val db = AppDatabase.getDatabase(requireContext())
         userRepository = UserRepository(db.userDao())
@@ -76,22 +75,13 @@ class GamesFragment : Fragment() {
             revivePet()
         }
 
-        addXpButton.setOnClickListener {
-            lifecycleScope.launch {
-                userRepository.addCoinsAndXP(0, 10)
-                updateLevelAndXpUI()
-                Toast.makeText(requireContext(), "Добавлено 10 XP", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         loadSkin()
         updateLevelAndXpUI()
 
         viewModel.lives.observe(viewLifecycleOwner) { lives ->
-            val maxLives = 3
-            livesProgressBar.max = maxLives
+            livesProgressBar.max = MAX_LIVES
             livesProgressBar.progress = lives
-            livesText.text = "$lives/$maxLives"
+            livesText.text = "$lives/$MAX_LIVES"
 
             updatePetState(lives)
             updateLivesUI(lives)
@@ -107,7 +97,7 @@ class GamesFragment : Fragment() {
     private fun loadSkin() {
         val sharedPref = requireActivity().getSharedPreferences("tamagotchi_prefs", 0)
         val skinResId = sharedPref.getInt("current_skin", R.drawable.pet_default)
-        val lives = viewModel.lives.value ?: 3
+        val lives = viewModel.lives.value ?: MAX_LIVES
         if (lives > 0) {
             petImage.setImageResource(skinResId)
         } else {
@@ -130,8 +120,7 @@ class GamesFragment : Fragment() {
     }
 
     private fun updateLivesUI(lives: Int) {
-        val maxLives = 3
-        livesProgressBar.max = maxLives
+        livesProgressBar.max = MAX_LIVES
 
         val animator = ValueAnimator.ofInt(0, lives)
         animator.duration = 1000
@@ -142,7 +131,7 @@ class GamesFragment : Fragment() {
         }
         animator.start()
 
-        livesText.text = "$lives/$maxLives"
+        livesText.text = "$lives/$MAX_LIVES"
     }
 
     private fun updateLevelAndXpUI() {
@@ -181,8 +170,8 @@ class GamesFragment : Fragment() {
 
             if (user.coins >= reviveCost) {
                 userRepository.addCoinsAndXP(-reviveCost, 0)
-                userRepository.updateLives(3)
-                viewModel.lives.postValue(3)
+                userRepository.updateLives(MAX_LIVES)
+                viewModel.lives.postValue(MAX_LIVES)
                 requireActivity().runOnUiThread {
                     Toast.makeText(requireContext(), "Питомец воскрешён!", Toast.LENGTH_SHORT).show()
                 }

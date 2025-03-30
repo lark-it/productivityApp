@@ -73,34 +73,87 @@ class HomeFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.updateLives()
+            initAchievements()
+            loadAchievements()
         }
-        initAchievements()
-        loadAchievements()
+
 
     }
-    private fun initAchievements() {
-        lifecycleScope.launch {
-            val dao = db.achievementDao()
-            val existing = dao.getAll()
-            if (existing.isEmpty()) {
-                dao.insert(AchievementEntity("first_task", "Первая задача", "Выполни первую задачу"))
-                dao.insert(AchievementEntity("first_habit", "Первая привычка", "Выполни первую привычку"))
-                dao.insert(AchievementEntity("three_in_day", "3 за день", "Выполни 3 дела за один день"))
+    private suspend fun initAchievements() {
+        val dao = db.achievementDao()
+        val existing = dao.getAll().map { it.id }.toSet()
+        Log.d("HomeFragment", "Existing achievements: $existing")
+
+        val predefined = listOf(
+            AchievementEntity("first_task", "Первая задача", "Выполни первую задачу"),
+            AchievementEntity("first_habit", "Первая привычка", "Выполни первую привычку"),
+            AchievementEntity("three_in_day", "3 за день", "Выполни 3 дела за один день"),
+            AchievementEntity("perfect_day", "Идеальный день", "Выполни все за день"),
+            AchievementEntity("seven_streak", "Семидневка", "Подряд 7 дней активности"),
+            AchievementEntity("task_master", "Мастер дел", "Выполни 50 задач"),
+            AchievementEntity("habit_keeper", "Продуктивность - это я", "Выполни 30 привычек"),
+            AchievementEntity("coin_collector", "Люблю золото", "Заработай 100 монет")
+        )
+
+        predefined.forEach { achievement ->
+            if (achievement.id !in existing) {
+                dao.insert(achievement)
+                Log.d("HomeFragment", "Inserted new achievement: ${achievement.id}")
             }
         }
     }
+
+
+
+
+
     private suspend fun checkAchievements(completedTasks: Int, completedHabits: Int) {
         val dao = db.achievementDao()
 
-        if (completedTasks >= 1) {
-            unlockAchievement(dao, "first_task")
+        if (completedTasks >= 1) unlockAchievement(dao, "first_task")
+        if (completedHabits >= 1) unlockAchievement(dao, "first_habit")
+        if ((completedTasks + completedHabits) >= 3) unlockAchievement(dao, "three_in_day")
+
+        val today = getToday()
+        val allTasksToday = db.taskDao().getTasksByDate(today)
+        val allHabits = db.habitsDao().getAllHabits()
+        val completedHabitIdsToday = db.habitCompletionDao().getCompletedHabitsOnDate(today).map { it.habitId }
+
+        val activeHabitsToday = allHabits.filter { habit ->
+            val startDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(habit.startDate)
+            if (startDate == null || startDate.time > System.currentTimeMillis()) return@filter false
+            when (habit.repeatType) {
+                RepeatType.DAILY -> true
+                RepeatType.WEEKLY -> {
+                    val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1
+                    habit.repeatDays?.contains(dayOfWeek) == true
+                }
+            }
         }
-        if (completedHabits >= 1) {
-            unlockAchievement(dao, "first_habit")
-        }
-        if ((completedTasks + completedHabits) >= 3) {
-            unlockAchievement(dao, "three_in_day")
-        }
+
+        val allDone = allTasksToday.all { it.isCompleted } &&
+                activeHabitsToday.all { it.id in completedHabitIdsToday }
+        if (allDone && allTasksToday.isNotEmpty()) unlockAchievement(dao, "perfect_day")
+
+
+        val user = userRepository.getUser()
+        // Семидневка
+        val completedHabitsDates = db.habitCompletionDao().getAllCompletedDates().map { it.date }
+        val completedTasksDates = db.taskDao().getAllTasks().filter { it.isCompleted }.map { it.date }
+
+        val currentStreak = calculateCurrentStreak(completedHabitsDates, completedTasksDates)
+        if (currentStreak >= 7) unlockAchievement(dao, "seven_streak")
+
+        // Мастер дел
+        val allTasks = db.taskDao().getAllTasks()
+        if (allTasks.count { it.isCompleted } >= 50) unlockAchievement(dao, "task_master")
+
+        // Привычка — вторая натура
+        val allHabitCompletions = db.habitCompletionDao().getAllCompletedDates()
+        if (allHabitCompletions.size >= 30) unlockAchievement(dao, "habit_keeper")
+
+        // Люблю золото
+        if (user.coins >= 100) unlockAchievement(dao, "coin_collector")
     }
 
     private suspend fun unlockAchievement(dao: AchievementDao, id: String) {
@@ -108,12 +161,15 @@ class HomeFragment : Fragment() {
         dao.update(achievement.copy(isUnlocked = true, unlockDate = getToday()))
     }
     private fun loadAchievements() {
+        val recycler = view?.findViewById<RecyclerView>(R.id.rv_achievements)
+        recycler?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
         lifecycleScope.launch {
             val achievements = db.achievementDao().getAll()
-
+                .sortedWith(compareByDescending<AchievementEntity> { it.isUnlocked }
+                    .thenByDescending { it.unlockDate ?: "" })
+            Log.d("HomeFragment", "Loaded achievements: ${achievements.map { "${it.id} (unlocked=${it.isUnlocked})" }}")
             requireActivity().runOnUiThread {
-                val recycler = view?.findViewById<RecyclerView>(R.id.rv_achievements)
-                recycler?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false) // ← вот это обязательно!
                 recycler?.adapter = AchievementAdapter(achievements)
             }
         }

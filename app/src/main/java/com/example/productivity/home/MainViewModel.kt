@@ -81,7 +81,6 @@ class MainViewModel(
         val user = userRepository.getUser()
         var lives = user.lives
         val lostLifeDates = mutableListOf<LocalDate>()
-        val maxLives = 3
 
         for (i in 1..ChronoUnit.DAYS.between(lastCheckedDate, today)) {
             val dateToCheck = lastCheckedDate.plusDays(i)

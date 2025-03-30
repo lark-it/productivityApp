@@ -3,13 +3,14 @@ package com.example.productivity.home
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.productivity.util.Constants
 
 @Entity(tableName = "user")
 data class UserEntity(
     @PrimaryKey val id: Int = 1,
     val coins: Int = 0,
     val xp: Int = 0,
-    val lives: Int = 3,
+    val lives: Int = Constants.MAX_LIVES,
     @ColumnInfo(name = "level") val level: Int = 1,
     @ColumnInfo(name = "rank") val rank: String = "Новичок"
 )

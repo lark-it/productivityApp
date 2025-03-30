@@ -12,7 +12,7 @@ interface UserDao {
     @Query("UPDATE user SET coins = coins + :coins, xp = xp + :xp WHERE id = 1")
     suspend fun updateCoinsAndXP(coins: Int, xp: Int)
 
-    @Query("INSERT OR IGNORE INTO user (id, coins, xp, lives, level, rank) VALUES (1, 0, 0, 3, 1, 'Новичок')")
+    @Query("INSERT OR IGNORE INTO user (id, coins, xp, lives, level, rank) VALUES (1, 0, 0, 10, 1, 'Новичок')")
     suspend fun createUserIfNotExists()
 
     @Query("UPDATE user SET lives = :lives WHERE id = 1")
