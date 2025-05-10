@@ -54,7 +54,7 @@ class TodayFragment : Fragment() {
                     habitCompletionDao.deleteCompletion(habitId, todayDate)
                 }
 
-                updateHabitCompletion(habitId, isChecked, todayDate) // ✅ Передаём правильные аргументы
+                updateHabitCompletion(habitId, isChecked, todayDate)
                 loadHabits()
             }
         }
@@ -63,10 +63,7 @@ class TodayFragment : Fragment() {
         loadHabits()
     }
 
-
-
-
-    private var habitProcessing = mutableSetOf<Int>() // ✅ Отслеживаем обработку привычек
+    private var habitProcessing = mutableSetOf<Int>()
 
 
     private fun updateHabitCompletion(habitId: Int, isCompleted: Boolean, date: String) {
@@ -87,13 +84,11 @@ class TodayFragment : Fragment() {
             val xpChange = 1
 
             if (!isCompleted) {
-                // ✅ Удаляем выполнение привычки **только за сегодня**
-                Log.d("TodayFragment", "❌ Удаляем выполнение habitId=$habitId за дату $date")
+                Log.d("TodayFragment", "Удаляем выполнение habitId=$habitId за дату $date")
                 userRepository.addCoinsAndXP(-coinChange, -xpChange)
                 habitCompletionDao.deleteCompletion(habitId, date)
             } else {
-                // ✅ Если привычка выполняется впервые сегодня
-                Log.d("TodayFragment", "✅ Начисляем монеты и опыт за habitId=$habitId за дату $date")
+                Log.d("TodayFragment", "Начисляем монеты и опыт за habitId=$habitId за дату $date")
                 userRepository.addCoinsAndXP(coinChange, xpChange)
                 habitCompletionDao.insertCompletion(HabitCompletionEntity(habitId, date, true))
             }
@@ -101,14 +96,12 @@ class TodayFragment : Fragment() {
             requireActivity().runOnUiThread {
                 loadHabits()
                 val homeFragment = parentFragmentManager.findFragmentByTag("HomeFragment") as? HomeFragment
-                homeFragment?.loadUserData() // Обновляем баланс на главном экране
+                homeFragment?.loadUserData()
             }
 
             habitProcessing.remove(habitId)
         }
     }
-
-
 
     private fun loadHabits() {
         lifecycleScope.launch {
@@ -145,7 +138,7 @@ class TodayFragment : Fragment() {
             sortedHabits.addAll(habitsToShow.filter { it.isCompleted })
 
             requireActivity().runOnUiThread {
-                adapter.updateList(sortedHabits) // ✅ Гарантируем обновление UI после обновления данных
+                adapter.updateList(sortedHabits)
             }
         }
     }

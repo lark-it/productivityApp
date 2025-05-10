@@ -41,7 +41,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "habits-db"
                 )
-                    .fallbackToDestructiveMigration() // 💥 ВАЖНО! Удалит старую БД при изменении версии
+                    .fallbackToDestructiveMigration() // ВАЖНО! Удалит старую БД при изменении версии
                     .build()
                 INSTANCE = instance
                 instance

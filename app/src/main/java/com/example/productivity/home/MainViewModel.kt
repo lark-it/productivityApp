@@ -67,7 +67,7 @@ class MainViewModel(
                 val newLives = currentLives - 1
                 userRepository.updateLives(newLives)
                 lives.postValue(newLives)
-                Log.d("MainViewModel", "❌ Жизнь отнята за отмену на $dateStr, осталось $newLives")
+                Log.d("MainViewModel", "Жизнь отнята за отмену на $dateStr, осталось $newLives")
             }
         }
     }
@@ -90,7 +90,7 @@ class MainViewModel(
             val completedHabits = habitsDao.getCompletedHabitsOnDate(dateStr)
 
             if (totalTasks == 0 && completedHabits == 0) {
-                Log.d("checkAndUpdateLives", "ℹ️ День $dateStr пустой — пропускаем")
+                Log.d("checkAndUpdateLives", "День $dateStr пустой — пропускаем")
                 continue
             }
 
@@ -98,7 +98,7 @@ class MainViewModel(
                 if (lives > 0) {
                     lives--
                     lostLifeDates.add(dateToCheck)
-                    Log.d("checkAndUpdateLives", "❌ Потеряна жизнь за $dateStr, осталось $lives")
+                    Log.d("checkAndUpdateLives", "Потеряна жизнь за $dateStr, осталось $lives")
                 }
             }
         }

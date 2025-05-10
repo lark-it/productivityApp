@@ -105,7 +105,7 @@ class ShopFragment : Fragment() {
                     userRepository.addCoinsAndXP(-5, 0)
                     userRepository.updateLives(user.lives + 1)
                     viewModel.updateLives()
-                    Toast.makeText(requireContext(), "Жизнь восстановлена!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "+1 жизнь! Береги себя и не забывай выполнять задачи!", Toast.LENGTH_SHORT).show()
                 }
  else {
                     Toast.makeText(requireContext(), "Недостаточно монет или максимум жизней", Toast.LENGTH_SHORT).show()
