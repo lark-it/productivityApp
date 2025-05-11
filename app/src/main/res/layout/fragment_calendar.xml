@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/eerie_black"
-    tools:context=".calendar.CalendarFragment">
+    tools:context=".ui.calendar.CalendarFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"

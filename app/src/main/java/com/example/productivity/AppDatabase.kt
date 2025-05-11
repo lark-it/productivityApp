@@ -5,17 +5,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.productivity.calendar.TaskDao
-import com.example.productivity.calendar.TaskEntity
-import com.example.productivity.habits.HabitCompletionDao
-import com.example.productivity.habits.HabitCompletionEntity
-import com.example.productivity.habits.HabitsDao
-import com.example.productivity.habits.HabitsEntity
-import com.example.productivity.home.HabitBonusEntity
-import com.example.productivity.home.UserDao
-import com.example.productivity.home.UserEntity
-import com.example.productivity.home.achievement.AchievementDao
-import com.example.productivity.home.achievement.AchievementEntity
+import com.example.productivity.data.calendar.Converters
+import com.example.productivity.data.tasks.TaskDao
+import com.example.productivity.data.tasks.TaskEntity
+import com.example.productivity.data.habits.HabitCompletionDao
+import com.example.productivity.data.habits.HabitCompletionEntity
+import com.example.productivity.data.habits.HabitsDao
+import com.example.productivity.data.habits.HabitsEntity
+import com.example.productivity.data.auth.HabitBonusEntity
+import com.example.productivity.data.auth.UserDao
+import com.example.productivity.data.auth.UserEntity
+import com.example.productivity.data.home.AchievementDao
+import com.example.productivity.data.home.AchievementEntity
 
 @Database(
     entities = [TaskEntity::class, HabitsEntity::class,

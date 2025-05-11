@@ -7,25 +7,25 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.productivity.home.HomeFragment"
+        android:name="com.example.productivity.ui.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_goals"
-        android:name="com.example.productivity.habits.HabitsFragment"
+        android:name="com.example.productivity.ui.habits.HabitsFragment"
         android:label="Goals"
         tools:layout="@layout/fragment_habits" />
 
     <fragment
         android:id="@+id/nav_calendar"
-        android:name="com.example.productivity.calendar.CalendarFragment"
+        android:name="com.example.productivity.ui.calendar.CalendarFragment"
         android:label="Calendar"
         tools:layout="@layout/fragment_calendar" />
 
     <fragment
         android:id="@+id/nav_games"
-        android:name="com.example.productivity.game.GamesFragment"
+        android:name="com.example.productivity.ui.game.GamesFragment"
         android:label="Game"
         tools:layout="@layout/fragment_games">
 
@@ -38,30 +38,30 @@
 
     <fragment
         android:id="@+id/nav_settings"
-        android:name="com.example.productivity.settings.SettingsFragment"
+        android:name="com.example.productivity.ui.settings.SettingsFragment"
         android:label="Settings"
         tools:layout="@layout/fragment_settings" />
 
     <fragment
         android:id="@+id/editHabitsFragment"
-        android:name="com.example.productivity.habits.edit.EditHabitsFragment"
+        android:name="com.example.productivity.ui.habits.EditHabitsFragment"
         android:label="Редактирование привычек"
         tools:layout="@layout/fragment_edit_habits" />
 
     <fragment
         android:id="@+id/AddHabitsFragment"
-        android:name="com.example.productivity.habits.AddHabitsFragment"
+        android:name="com.example.productivity.ui.habits.AddHabitsFragment"
         android:label="Добавление привычек"
         tools:layout="@layout/fragment_add_habits" />
     <fragment
         android:id="@+id/AddTasksFragment"
-        android:name="com.example.productivity.calendar.AddTasksFragment"
+        android:name="com.example.productivity.ui.tasks.AddTasksFragment"
         android:label="Добавление задач"
         tools:layout="@layout/fragment_add_tasks" />
 
     <fragment
         android:id="@+id/editOneHabitFragment"
-        android:name="com.example.productivity.habits.edit.EditOneHabitFragment"
+        android:name="com.example.productivity.ui.habits.EditOneHabitFragment"
         android:label="Редактировать привычку"
         tools:layout="@layout/fragment_edit_one_habit">
         <argument
@@ -80,7 +80,7 @@
 
     <fragment
         android:id="@+id/editTaskFragment"
-        android:name="com.example.productivity.calendar.EditTaskFragment"
+        android:name="com.example.productivity.ui.tasks.EditTaskFragment"
         android:label="Редактировать задачу"
         tools:layout="@layout/fragment_edit_task">
         <argument
@@ -105,13 +105,13 @@
 
     <fragment
         android:id="@+id/shopFragment"
-        android:name="com.example.productivity.game.ShopFragment"
+        android:name="com.example.productivity.ui.game.ShopFragment"
         android:label="Магазин"
         tools:layout="@layout/fragment_shop"/>
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.productivity.auth.LoginFragment"
+        android:name="com.example.productivity.ui.auth.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login">
         <action

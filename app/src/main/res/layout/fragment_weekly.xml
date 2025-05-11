@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".habits.weekly.WeeklyFragment">
+    tools:context=".ui.habits.weekly.WeeklyFragment">
 
     <TextView
         android:id="@+id/tvWeeklyHeader"
